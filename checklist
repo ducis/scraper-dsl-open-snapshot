@@ -1,0 +1,30 @@
+* PArrows
+    Synopsis: Arrow parser combinators similar to Parsec
+--
+* indents
+    Synopsis: indentation sensitive parser-combinators for parsec
+--
+* parco
+    Synopsis: Generalised parser combinators
+--
+* parco-attoparsec
+    Synopsis: Generalised parser combinators - Attoparsec interface
+--
+* parco-parsec
+    Synopsis: Generalised parser combinators - Parsec interface
+--
+* parcom-lib
+    Synopsis: A simple parser-combinator library, a bit like Parsec but without
+--
+* parsimony
+    Synopsis: Monadic parser combinators derived from Parsec
+--
+-* polyparse
+    Synopsis: A variety of alternative parser combinator libraries.
+--
+-* ponder
+    Synopsis: PEG parser combinator
+--
+* trifecta
+    Synopsis: A modern parser combinator library with convenient diagnostics
+--
