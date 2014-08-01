@@ -1,0 +1,2 @@
+try:
+	runghc scrapoo.hs
