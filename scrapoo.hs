@@ -10,26 +10,47 @@ import Control.Monad
 import Text.Boomerang
 import Text.Boomerang.String
 import Text.Boomerang.TH
+import Data.Char
 
 data Foo = Bar | Baz Int Char deriving (Eq,Show,Read)
 
-$(makeBoomerangs ''Foo)
+type Quote = String
+type Named = String
+data Expr 
+	= ExQuote String
+	| ExRef String
+	| ExComposed {
+		ecFixity::Char{-'i','l','r'-}, 
+		ecOperator::String, 
+		ecOperands::[Expr]
+		}
+	| ExNamed {
+		enExpr::Expr,
+		enName::String
+		}
+	| ExBranch [Expr]
+	-- | ExDumb
+	deriving (Eq,Read,Show)
 
-foo :: StringBoomerang () (Foo :- ())
-foo =
-	(	rBar
-	<> rBaz . "baz-" . int . "-" . alpha
+$(makeBoomerangs ''Expr)
+
+expr :: StringBoomerang () (Expr :- ())
+expr = 
+	(	rExRef . lit "$" . rList1 (satisfy isAlphaNum) -- Should I allow zero-length names?
+	<>	rExRef . lit "\\" . rList1 (satisfy isAlphaNum)
+	<> rExQuote . rList (satisfy (/='¶')) . opt (lit "¶")
 	)
 
-test1 = parseString foo "baz-2-c"
-
-test2 = parseString foo ""
-
-test3 = parseString foo "baz-2-3"
-
-test4 = unparseString foo (Baz 1 'z')
-
 main = do
-	mapM_ print $ [test1,test2,test3]
-	print test4
-	--print test4
+	let test s = do
+		putStrLn "========================================="
+		let a@(Right e) = parseString expr s
+		print e
+		let b@(Just s) = unparseString expr e
+		print s
+		putStrLn s
+	test "\"1234\""
+	test "$abcf"
+	test "$"
+	test "$$"
+	return ()
