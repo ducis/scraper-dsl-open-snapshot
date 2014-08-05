@@ -43,6 +43,18 @@ Elements
 	Multiplicity
 	Functional map/filter ? regex catch and replace?
 
+How to deal with name scoping?
+	Separate selector structure and namespace nesting
+How to structure output?
+	{a b} * {d e f}
+	a * d
+	a * e
+	a * f
+	b * d
+	b * e
+	b * f
+
+
 Explicit syntax tree (the long form)
 	invertible-syntax
 	partial-isomorphisms

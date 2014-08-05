@@ -1,23 +1,27 @@
 #!/usr/bin/runghc
 {-# Language TemplateHaskell, QuasiQuotes, FlexibleContexts, 
-	TypeOperators, TupleSections, LambdaCase, OverloadedStrings #-}
+	TypeOperators, TupleSections, LambdaCase, OverloadedStrings,
+	NoMonomorphismRestriction, RelaxedPolyRec, ScopedTypeVariables #-}
 
 import Text.Groom
 import Text.Boomerang
 import Prelude hiding ((.), id)
 import Control.Category ((.), id)
 import Control.Monad
-import Text.Boomerang
-import Text.Boomerang.String
-import Text.Boomerang.TH
 import Data.Char
+import Control.Isomorphism.Partial
+import Control.Isomorphism.Partial.TH
+import Control.Isomorphism.Partial.Unsafe (Iso (Iso))
+import Text.Syntax
+import qualified Text.Syntax.Parser.Naive as Parser
+import qualified Text.Syntax.Printer.Naive as Printer
+import Data.Maybe
 
-data Foo = Bar | Baz Int Char deriving (Eq,Show,Read)
 
 type Quote = String
 type Named = String
 data Expr 
-	= ExQuote String
+	= ExSelector String
 	| ExRef String
 	| ExComposed {
 		ecFixity::Char{-'i','l','r'-}, 
@@ -26,31 +30,42 @@ data Expr
 		}
 	| ExNamed {
 		enExpr::Expr,
-		enName::String
+		enName::String 
 		}
+	| ExBlock [Expr]
 	| ExBranch [Expr]
 	-- | ExDumb
-	deriving (Eq,Read,Show)
+	deriving (Eq,Read,Show,Ord)
 
-$(makeBoomerangs ''Expr)
+$(defineIsomorphisms ''Expr)
 
-expr :: StringBoomerang () (Expr :- ())
-expr = 
-	(	rExRef . lit "$" . rList1 (satisfy isAlphaNum) -- Should I allow zero-length names?
-	<>	rExRef . lit "\\" . rList1 (satisfy isAlphaNum)
-	<> rExQuote . rList (satisfy (/='¶')) . opt (lit "¶")
-	)
+alpha = subset isAlpha <$> token
+num = subset isNumber <$> token
+
+identifier = cons <$> alpha <*> many (alpha <|> num)
+
+expr::Syntax f => f Expr
+expr = exRef <$> text "$" *> identifier
+	<|> exBlock <$> betweenl (text "{")
+	<|> exSelector <$> many1 (subset (/='¶') <$> token)
+
+test p p' x = do
+	putStrLn "========================================="
+	putStrLn x
+	--let p0 = Parser.Parser p
+	--let p1 = Printer.Printer p
+	let a = Parser.parse p x::[Expr]
+	print a
+	let b = map (Printer.print p') a
+	putStrLn $ unlines $ catMaybes b
+
 
 main = do
-	let test s = do
-		putStrLn "========================================="
-		let a@(Right e) = parseString expr s
-		print e
-		let b@(Just s) = unparseString expr e
-		print s
-		putStrLn s
-	test "\"1234\""
-	test "$abcf"
-	test "$"
-	test "$$"
+	let t = test expr expr
+	t "\"1234\""
+	t "$abcf"
+	t "$"
+	t "$$"
+	t "\\abcf"
 	return ()
+
