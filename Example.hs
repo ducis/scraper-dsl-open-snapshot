@@ -70,7 +70,9 @@ main = do
 		--print b
 		--print b
 	let p = expression
-	let x = "ifzero (2+3*4) (5) else (6)"
+	--let x = "ifzero (2+3*4) (5) else (6)"
+	let x = "(1+2)+(3+4)+5+6"
+	putStrLn x
 	let a = Parser.parse p x
 	print a
 	let b = map (Printer.print p) a

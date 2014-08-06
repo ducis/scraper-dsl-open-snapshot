@@ -4,8 +4,7 @@
 	NoMonomorphismRestriction, RelaxedPolyRec, ScopedTypeVariables #-}
 
 import Text.Groom
-import Text.Boomerang
-import Prelude hiding ((.), id)
+import Prelude hiding ((.), id, foldl)
 import Control.Category ((.), id)
 import Control.Monad
 import Data.Char
@@ -16,15 +15,16 @@ import Text.Syntax
 import qualified Text.Syntax.Parser.Naive as Parser
 import qualified Text.Syntax.Printer.Naive as Printer
 import Data.Maybe
+import qualified Data.List as Ls
 
 
 type Quote = String
 type Named = String
 data Expr 
-	= ExSelector String
+	= ExSelector Char String
 	| ExRef String
 	| ExComposed {
-		ecFixity::Char{-'i','l','r'-}, 
+		-- ecFixity::Char{-'i','l','r'-}, --
 		ecOperator::String, 
 		ecOperands::[Expr]
 		}
@@ -34,6 +34,7 @@ data Expr
 		}
 	| ExBlock [Expr]
 	| ExBranch [Expr]
+	| ExInfixBinary Expr String Expr
 	-- | ExDumb
 	deriving (Eq,Read,Show,Ord)
 
@@ -41,13 +42,32 @@ $(defineIsomorphisms ''Expr)
 
 alpha = subset isAlpha <$> token
 num = subset isNumber <$> token
+symbol = subset isSymbol <$> token
+symbolicOp = many1 symbol
 
-identifier = cons <$> alpha <*> many (alpha <|> num)
+--identifier = cons <$> alpha <*> many (alpha <|> num)
+identifier = many (alpha <|> num) 
 
 expr::Syntax f => f Expr
-expr = exRef <$> text "$" *> identifier
-	<|> exBlock <$> betweenl (text "{")
-	<|> exSelector <$> many1 (subset (/='¶') <$> token)
+expr = e0 
+	where
+	e0 = chainl1 e1 symbolicOp exInfixBinary
+	e1 = foldl exNamed <$> e2 <*> many (text "@" *> identifier)
+	e2 = expr'
+
+mkSelector delim = 
+	exSelector <$> pure d <*> between (text [d]) (text [d]) 
+	(many $ subset (/=d) <$> token <|> (text [d,d] *> pure d))
+	where
+	d = delim
+
+selectors = Ls.foldl1 (<|>) $ map mkSelector "/¶\\█○"
+--selectors = mkSelector '/' <|> mkSelector '\\'
+
+
+expr' = exRef <$> text "$" *> identifier
+	<|> exBlock <$> between (text "{") (text "}") (many expr)
+	<|> selectors
 
 test p p' x = do
 	putStrLn "========================================="
@@ -59,13 +79,11 @@ test p p' x = do
 	let b = map (Printer.print p') a
 	putStrLn $ unlines $ catMaybes b
 
-
 main = do
 	let t = test expr expr
-	t "\"1234\""
-	t "$abcf"
-	t "$"
+	t "$abcf@kkk+++/.whatever//.kkk/@abc@def+++○div○@123@@"
+	t "$aaa@kkk"
+	t ""
 	t "$$"
-	t "\\abcf"
 	return ()
 

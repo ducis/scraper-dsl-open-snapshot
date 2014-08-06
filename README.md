@@ -14,18 +14,53 @@ Elements
 		prefix some`
 		what about arity?
 		υ		add
+					selector
+					elements::Element+
+					html
+					selection::jQuery
+					selector, context::Element
 				addBack
+					selector?
 				children
+					selector?
 		←		closest
+					selector
+					selector, context?
+					selection
+					element
+					array of selectors, context?
 				contents
+					()
 				end
+					()
 				eq
+					index::int
 				filter
+					selector
+					function
+					elements
+					selection
 		→		find
+					selector
+					selection
+					element::Element
 				first
+					()
 				has
+					selector
+					element
+				is :: -> Boolean
+					selector
+					function
+					selection
+					elements
 				last
-		↓		next
+					()
+				map :: -> jQuery
+					function(index,element) :: -> anything
+		↓		next 
+					selector?
+					
 				nextAll
 				nextUntil
 				not
