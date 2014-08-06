@@ -33,6 +33,7 @@ data Expr
 		enName::String 
 		}
 	| ExBlock [Expr]
+	| ExSuffixBlock [(String,Expr)]
 	| ExBranch [Expr]
 	| ExInfixBinary Expr String Expr
 	-- | ExDumb

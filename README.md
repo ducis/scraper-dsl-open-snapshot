@@ -95,6 +95,8 @@ Elements
 	Multiplicity
 	Functional map/filter ? regex catch and replace?
 
+'filter' arguments are removed
+
 How to deal with name scoping?
 	Separate selector structure and namespace nesting
 How to structure output?
@@ -112,3 +114,7 @@ Explicit syntax tree (the long form)
 	partial-isomorphisms
 
 commandline utility integratable into dwb
+
+transformation
+
+manipulation
