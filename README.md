@@ -14,9 +14,9 @@ Elements
 		prefix some`
 		what about arity?
 		υ		add
-					selector
+					selector::Selector
 					elements::Element+
-					html
+					html::String
 					selection::jQuery
 					selector, context::Element
 				addBack
@@ -28,7 +28,7 @@ Elements
 					selector, context?
 					selection
 					element
-					array of selectors, context?
+					selectors::Selector+, context?
 				contents
 					()
 				end
@@ -51,7 +51,7 @@ Elements
 					element
 				is :: -> Boolean
 					selector
-					function
+					function(index,element) :: -> Boolean
 					selection
 					elements
 				last
@@ -60,18 +60,35 @@ Elements
 					function(index,element) :: -> anything
 		↓		next 
 					selector?
-					
 				nextAll
+					selector?
 				nextUntil
+					selector?, filter?
+					(element::Element|jQuery)?, filter?
 				not
+					selector::Selector|Element+
+					function
+					selection
 				offsetParent
+					()
 				parent
+					selector?
 				parents
+					selector?
 				parentsUntil
+					selector?, filter?
+					(element::Element|jQuery)?, filter?
 		↑		prev
+					selector?
+				prevAll
+					selector?
 				prevUntil
+					selector?, (filter::Selector)?
+					element::Element|jQuery, filter?
 				siblings
+					selector?
 				slice
+					start::Int, end?
 
 	Naming
 	Branching
