@@ -28,7 +28,7 @@ Elements
 					selector, context?
 					selection
 					element
-					selectors::Selector+, context?
+					(deprecated) selectors::Selector+, context?
 				contents
 					()
 				end
