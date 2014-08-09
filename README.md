@@ -94,6 +94,8 @@ Elements
 	Branching
 	Multiplicity
 	Functional map/filter ? regex catch and replace?
+	How to place extraction points? How to structure output?
+	What about following links ?
 
 'filter' arguments are removed
 

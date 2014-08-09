@@ -36,16 +36,43 @@ data Expr
 	| ExSuffixBlock [(String,Expr)]
 	| ExBranch [Expr]
 	| ExInfixBinary Expr String Expr
+	| ExPostfix [Expr] String
+	| ExRegex
 	-- | ExDumb
 	deriving (Eq,Read,Show,Ord)
+
+-- use '_' for find
+
+-- what about pattern matching? generalized regex? CFG? 
+--		need predicates
+
+-- data BasicType = Selector | Array of Elements | Element | Int
+-- "SXEI"
+-- Try to avoid 'Element' type
+-- X -> S -> X
+-- X -> X -> X
+-- X -> X
+-- X -> S -> X -> X -- add(selector, context)
+
+-- X -> (X -> X) -> X -- addBack
+-- -- -- -- -- -- -- -- can be composed -- X -> (X -> X) -> S -> X 
+--
+-- Coerce leftmost X into S
+-- minimize use of names
 
 $(defineIsomorphisms ''Expr)
 
 alpha = subset isAlpha <$> token
 num = subset isNumber <$> token
 symbol = subset isSymbol <$> token
-symbolicOp = many1 symbol
 
+symbolicOp = many1 symbol
+alphaOp = many1 alpha
+
+--how to define partial application?
+--1 2 ``a
+--1 a 2
+--1 `a
 --identifier = cons <$> alpha <*> many (alpha <|> num)
 identifier = many (alpha <|> num) 
 
