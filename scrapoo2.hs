@@ -22,6 +22,10 @@ import Text.Groom
 
 type Quote = String
 type Named = String
+data ExprR
+	= ExRPostfix [Expr] String
+	| ExRNamed String
+	deriving (Eq,Read,Show,Ord)
 data Expr 
 	= ExSelector Char String
 	| ExRef String
@@ -30,12 +34,12 @@ data Expr
 	| ExBranch [Expr]
 	| ExInfixBinary Expr String Expr
 	| ExPrefix String [Expr]
-	| ExPostfix Expr [Expr] String
-	| ExNamed Expr String
+	| ExLR Expr ExprR
 	| ExRegex
 	-- | ExDumb
 	deriving (Eq,Read,Show,Ord)
 
+$(defineIsomorphisms ''ExprR)
 $(defineIsomorphisms ''Expr)
 
 operatorSymbols = stringCS "-+" --Read from the operator def table
@@ -73,19 +77,22 @@ alts = Ls.foldl1 (<|>)
 expr::Syntax f => f Expr
 expr = e 0 
 	where
-	postfixNRest x n = nList (n-1) x <*> arityMark n *> operator
+	postfixNRest x n = exRPostfix <$> nList (n-1) x <*> arityMark n *> operator
 	e::Syntax f => Int -> f Expr
 	e = \case
 		i@0 -> chainl1 (e (i+1)) operator exInfixBinary
 		i@1 -> let x = e $ i+1 in 
-			foldl exPostfix <$> x <*> many (alts $ map (postfixNRest x) [1,2,3])
-		i@2 -> foldl exNamed <$> e(i+1) <*> many (text "@" *> identifier)
+			(\r->foldl exLR <$> x <*> many r) 
+			$	exRNamed <$> text "@" *> identifier
+			<|>   alts (map (postfixNRest x) [1,2,3])
 		_ -> expr'
 
 expr'::Syntax f => f Expr
 expr' = exRef <$> text "$" *> identifier
 	<|> exSlot <$> text "_"
 	<|> selectors
+--	<|> exPrefix <$> text ":." <*> nlist 3 expr
+--	<|> exPrefix <$> text ":" <*> nlist 2 expr
 	<|> alts (map prefixN [1,2,3]) 
 	<|> exBlock <$> between (text "{") (text "}") (many expr)
 	where

@@ -114,7 +114,7 @@ How to structure output?
 
 -- use '-' for find
 -- how to define partial application?
--- use '\_' for 'slot'
+-- use '_' for slots
 
 -- what about DOM-level pattern matching? generalized regex? CFG? 
 --		need predicates
