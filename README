@@ -97,6 +97,8 @@ Elements
 	How to place extraction points? How to structure output?
 	What about following links ?
 
+when generating js consider using a special jquery '$' variable.
+
 'filter' arguments are removed
 
 How to deal with name scoping?
@@ -109,6 +111,34 @@ How to structure output?
 	b * d
 	b * e
 	b * f
+
+-- use '-' for find
+-- how to define partial application?
+-- use '\_' for 'slot'
+
+-- what about DOM-level pattern matching? generalized regex? CFG? 
+--		need predicates
+--	what about text level pattern matching?
+
+-- data BasicType = Selector | Array of Elements | Element | Int
+-- "SXEI"
+-- Try to avoid 'Element' type
+-- X -> S -> X
+-- X -> X -> X
+-- X -> X
+-- X -> S -> X -> X -- add(selector, context)
+
+-- X -> (X -> X) -> X -- addBack
+-- -- -- -- -- -- -- -- can be composed -- X -> (X -> X) -> S -> X 
+--
+-- Coerce leftmost X into S
+-- minimize use of names
+
+--1 .a
+--1 2 :a
+--1 2 3 .:a
+--1 a 2
+
 
 
 Explicit syntax tree (the long form)
