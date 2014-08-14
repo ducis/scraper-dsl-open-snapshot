@@ -67,8 +67,6 @@ operator f
 	<|> f (opAlphabetic <$> many1 alpha)
 	<|> f (opComposed <$> exprs)
 
-exprs = quote "[" "]" (many expr)
-
 --identifier = cons <$> alpha <*> many (alpha <|> num)
 identifier = many (alpha <|> num) 
 
@@ -77,6 +75,8 @@ mkSelector delim =
 	(many $ subset (/=d) <$> token <|> (text [d,d] *> pure d))
 	where
 	d = delim
+
+exprs = quote' "[" "]" (many' expr)
 
 selectors = Ls.foldl1 (<|>) $ map mkSelector "/¶\\█○"
 
@@ -91,7 +91,7 @@ alts :: Alternative f => [f x] -> f x
 alts = Ls.foldl1 (<|>)
 
 naming = (text "@" ☆> identifier)
-names = many naming 
+names = many' naming 
 
 infixr 6 <★>
 infixr 6 <☆>
@@ -99,7 +99,8 @@ a <★> b = a <*> optSpace *> b
 a <☆> b = a <*> skipSpace *> b
 a ★> b = a *> optSpace *> b
 a ☆> b = a *> skipSpace *> b
-[many', many_] = map sepBy [optSpace, skipSpace]
+many_ = (`sepBy` optSpace)
+many' = (`sepBy` skipSpace)
 
 postfixNRest x n = nList (n-1) x <☆> arityMark n *> operator id <☆> names
 prefixN x n = exPrefix <$> operator id <*> arityMark n ☆> names <☆> nList n x
@@ -111,7 +112,7 @@ expr = e 0
 	e = \case
 		i@0 -> chainl1 (e (i+1)) (operator $ quote "`" "`") exInfixBinary
 		i@1 -> let x = e $ i+1 in 
-			foldl exPostfix <$> x <☆> many (alts $ map (postfixNRest x) [1,2,3])
+			foldl exPostfix <$> x <☆> many' (alts $ map (postfixNRest x) [1,2,3])
 			<|> alts (map (prefixN x) [1,2,3])
 		i@2 -> foldl exNamed <$> e(i+1) <☆> names
 		_ -> expr'
@@ -152,12 +153,12 @@ main = do
 	t0 "+``@x$1@a$2@b$3@c$4@d```-@z"
 	t0 "$`a`$"
 	t0 "$a$``a"
-
 	t' [here|$`[_`a]
 	|]
+	t' "$ `+"
+	t' "$ $ ``+"
 
 	t "--``$abcd"
 	t ""
-	t "$$"
 	return ()
 
