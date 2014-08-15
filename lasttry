@@ -1,0 +1,112 @@
+=========================================
+$abcf@kkk+++/.whatever//.kkk/@abc@def+++○div○@123@1@1
+$abcf@kkk+++/.whatever//.kkk/@abc@def+++○div○@123@1@1
+=========================================
+$@+++/.whatever//.kkk/@@+++○div○@@@
+$@+++/.whatever//.kkk/@@+++○div○@@@
+=========================================
+$aaa@kkk-_
+$aaa@kkk-_
+=========================================
+--`$abcf
+--`$abcf
+=========================================
+--``/.ww/@1$1
+--``/.ww/@1$1
+=========================================
+$a$b``+$1``+
+$a$b``+$1``+
+=========================================
+$1`+@5
+$1`+@5
+=========================================
++`$1@5
++`$1@5
+=========================================
+$1--$2@3$4@5$5@6```x/a/@1``y/b/@2``z-/fff/@5
+$1--$2@3$4@5$5@6```x/a/@1``y/b/@2``z-/fff/@5
+=========================================
+$--$@$@$@```x/a/@``y/b/@``z-/fff/@
+$--$@$@$@```x/a/@``y/b/@``z-/fff/@
+=========================================
++``$1$2$3``-
+=========================================
++``@x$1@a$2@b$3@c$4@d```-@z
+=========================================
+$`a`$
+$`a`$
+=========================================
+$a$``a
+$a$``a
+=========================================
+$`[_`a]
+[ExPostfix (ExRef "") []
+   (OpComposed [ExPostfix ExSlot [] (OpAlphabetic "a") []])
+   []]
+$`[_`a]
+=========================================
+$ `+
+[ExPostfix (ExRef "") [] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [] (OpSymbolic "+") []]
+$`+
+$`+
+$`+
+=========================================
+$ $ ``+
+[ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") []]
+$$``+
+$$``+
+$$``+
+$$``+
+=========================================
+$a $ ``+
+[ExPostfix (ExRef "a") [ExRef ""] (OpSymbolic "+") [],
+ ExPostfix (ExRef "a") [ExRef ""] (OpSymbolic "+") [],
+ ExPostfix (ExRef "a") [ExRef ""] (OpSymbolic "+") [],
+ ExPostfix (ExRef "a") [ExRef ""] (OpSymbolic "+") []]
+$a$``+
+$a$``+
+$a$``+
+$a$``+
+=========================================
+$ $b ``+
+[ExPostfix (ExRef "") [ExRef "b"] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [ExRef "b"] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [ExRef "b"] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [ExRef "b"] (OpSymbolic "+") []]
+$$b``+
+$$b``+
+$$b``+
+$$b``+
+=========================================
+$a $b ``+
+[ExPostfix (ExRef "a") [ExRef "b"] (OpSymbolic "+") [],
+ ExPostfix (ExRef "a") [ExRef "b"] (OpSymbolic "+") [],
+ ExPostfix (ExRef "a") [ExRef "b"] (OpSymbolic "+") [],
+ ExPostfix (ExRef "a") [ExRef "b"] (OpSymbolic "+") []]
+$a$b``+
+$a$b``+
+$a$b``+
+$a$b``+
+=========================================
+$ $``+
+[ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") []]
+$$``+
+$$``+
+=========================================
+$$ ``+
+[ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") []]
+$$``+
+$$``+
+=========================================
+--``$abcd
+[]
+=========================================
+
+[]
