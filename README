@@ -95,7 +95,10 @@ Elements
 	Multiplicity
 	Functional map/filter ? regex catch and replace?
 	How to place extraction points? How to structure output?
-	What about following links ?
+	What about following links & manipulate js-driven controls?
+		diffing event streams
+		POSTs
+	Stats (e.g. group of radio buttons/checkboxes)
 
 when generating js consider using a special jquery '$' variable.
 
@@ -150,3 +153,5 @@ commandline utility integratable into dwb
 transformation
 
 manipulation
+
+boomerang

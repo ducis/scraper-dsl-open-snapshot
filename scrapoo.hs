@@ -3,7 +3,6 @@
 	TypeOperators, TupleSections, LambdaCase, OverloadedStrings,
 	NoMonomorphismRestriction, RelaxedPolyRec, ScopedTypeVariables #-}
 
-import Text.Groom
 import Prelude hiding ((.), id, foldl)
 import Control.Category ((.), id)
 import Control.Monad
@@ -42,8 +41,11 @@ data Expr
 	| ExRegex --TODO
 	deriving (Eq,Read,Show,Ord)
 
---TODO: Indentation
+--TODO: .html .text .etc
+--http://api.jquery.com/category/attributes/
+--	val() prop(String) html() hasClass(string) attr(string) text() css(String)
 --TODO: Extraction
+--TODO: Indentation
 
 -- $a .`+ 
 -- =
@@ -190,4 +192,5 @@ main = do
 	t ""-}
 
 
+	putStrLn "*******\nDONE!!!\n*******"
 	return ()
