@@ -53,7 +53,6 @@ $(defineIsomorphisms ''Expr)
 $(defineIsomorphisms ''Operator)
 
 quote l r = between (text l) (text r)
-quote' l r = between (text l<*skipSpace) (skipSpace*>text r)
 
 operatorSymbols = stringCS "-+" --Read from the operator def table
 
@@ -65,7 +64,7 @@ operator f
 	-- = opSimple <$> (many1 symbol <|> many1 alpha)
 	= opSymbolic <$> many1 symbol
 	<|> f (opAlphabetic <$> many1 alpha)
-	<|> f (opComposed <$> exprs)
+	<|> f (opComposed <$> exprList )
 
 --identifier = cons <$> alpha <*> many (alpha <|> num)
 identifier = many (alpha <|> num) 
@@ -76,7 +75,7 @@ mkSelector delim =
 	where
 	d = delim
 
-exprs = quote' "[" "]" (many' expr)
+exprList = quote "[" "]" (manySfx expr <* skipSpace)
 
 selectors = Ls.foldl1 (<|>) $ map mkSelector "/¶\\█○"
 
@@ -91,19 +90,21 @@ alts :: Alternative f => [f x] -> f x
 alts = Ls.foldl1 (<|>)
 
 naming = (text "@" ☆> identifier)
-names = many' naming 
+namesSfx = manySfx naming 
 
-infixr 6 <★>
+--infixr 6 <★>
 infixr 6 <☆>
-a <★> b = a <*> optSpace *> b
+--a <★> b = a <*> optSpace *> b
 a <☆> b = a <*> skipSpace *> b
-a ★> b = a *> optSpace *> b
+--a ★> b = a *> optSpace *> b
 a ☆> b = a *> skipSpace *> b
-many_ = (`sepBy` optSpace)
+--many_ = (`sepBy` optSpace)
 many' = (`sepBy` skipSpace)
+manySfx = many.(skipSpace*>)
+--manySfx_ = many.(sepSpace*>)
 
-postfixNRest x n = nList (n-1) x <☆> arityMark n *> operator id <☆> names
-prefixN x n = exPrefix <$> operator id <*> arityMark n ☆> names <☆> nList n x
+postfixNRest x n = nList (n-1) (x<*skipSpace) <*> arityMark n *> operator id <*> namesSfx
+prefixN x n = exPrefix <$> operator id <*> arityMark n *> namesSfx <*> nList n (skipSpace*>x)
 
 expr::Syntax f => f Expr
 expr = e 0 
@@ -111,10 +112,12 @@ expr = e 0
 	e::Syntax f => Int -> f Expr
 	e = \case
 		i@0 -> chainl1 (e (i+1)) (operator $ quote "`" "`") exInfixBinary
-		i@1 -> let x = e $ i+1 in 
-			foldl exPostfix <$> x <☆> many' (alts $ map (postfixNRest x) [1,2,3])
-			<|> alts (map (prefixN x) [1,2,3])
-		i@2 -> foldl exNamed <$> e(i+1) <☆> names
+		i@1 ->
+			foldl exPostfix <$> y <*> manySfx (alts $ map (postfixNRest y) [1,2,3])
+			where
+			x = e $ i+1 
+			y = x <|> alts (map (prefixN x) [1,2,3])
+		i@2 -> foldl exNamed <$> e(i+1) <*> namesSfx
 		_ -> expr'
 
 expr'::Syntax f => f Expr
@@ -122,23 +125,26 @@ expr' = exRef <$> text "$" *> identifier
 	<|> exSlot <$> text "_"
 	<|> selectors
 	-- <|> alts (map prefixN [1,2,3]) 
-	<|> exBlock <$> exprs
+	<|> exBlock <$> exprList
 
 test p p' f x = do
 	putStrLn "========================================="
 	putStrLn x
 	--let p0 = Parser.Parser p
 	--let p1 = Printer.Printer p
-	let a = Parser.parse p x::[Expr]
+	let a = Parser.parse p x
 	--putStrLn $ groom a
-	f a
+	mapM_ f a
 	let b = map (Printer.print p') a
+	let ls = catMaybes b
 	putStr $ unlines $ catMaybes b
+	when (length ls /= 1) $ fail (show (length ls)++" results!")
 
 main = do
 	let t = test expr expr print
 	let t' = test expr expr $ putStrLn.groom
 	let t0 = test expr expr $ \_->return ()
+	let z x s = putStr ">>" >> print s >> mapM_ print (Parser.parse x s)
 	t0 "$abcf@kkk+++/.whatever//.kkk/@abc@def+++○div○@123@1@1"
 	t0 "$@+++/.whatever//.kkk/@@+++○div○@@@"
 	t0 "$aaa@kkk-_"
@@ -149,6 +155,13 @@ main = do
 	t0 "+`$1@5"
 	t0 "$1--$2@3$4@5$5@6```x/a/@1``y/b/@2``z-/fff/@5"
 	t0 "$--$@$@$@```x/a/@``y/b/@``z-/fff/@"
+	t0 "+``$1$2"
+	t0 "$2$3``-"
+	t0 "[+`$]`-"
+	t0 "+`[$`-]"
+	t0 "+`$`-"
+	t0 "[+``$1$2]$3``-"
+	t0 "+``$1[$2$3``-]"
 	t0 "+``$1$2$3``-"
 	t0 "+``@x$1@a$2@b$3@c$4@d```-@z"
 	t0 "$`a`$"
@@ -167,14 +180,17 @@ main = do
 	t' "[/a/ ]"
 	t' "[ /a/]"
 	t' "[ ]"
-    let ts = test (many' expr) (many' expr) $ putStrLn.groom
-    ts "/a/"
-    ts "/a/ "
-    ts " /a/"
-    ts " /a/ "
+	{-z exprList "[]"
+	z exprList "[ ]"
+	z (many' expr) "/a/"
+	z (many' expr) "/a/ "
+	z (many' expr) " /a/"
+	z (many' expr) " /a/ "
+	z (many' alpha) "a"
+	z (many' alpha) "a "-}
 
-	t "--``$abcd"
-	t ""
+	{-t "--``$abcd"
+	t ""-}
 
 
 	return ()
