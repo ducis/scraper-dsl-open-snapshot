@@ -45,14 +45,6 @@ $`[_`a]
    []]
 $`[_`a]
 =========================================
-$ `+
-[ExPostfix (ExRef "") [] (OpSymbolic "+") [],
- ExPostfix (ExRef "") [] (OpSymbolic "+") [],
- ExPostfix (ExRef "") [] (OpSymbolic "+") []]
-$`+
-$`+
-$`+
-=========================================
 $ $ ``+
 [ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") [],
  ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") [],
@@ -104,6 +96,14 @@ $$ ``+
  ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") []]
 $$``+
 $$``+
+=========================================
+$ `+
+[ExPostfix (ExRef "") [] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [] (OpSymbolic "+") [],
+ ExPostfix (ExRef "") [] (OpSymbolic "+") []]
+$`+
+$`+
+$`+
 =========================================
 --``$abcd
 []
