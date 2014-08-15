@@ -42,7 +42,7 @@ data Expr
 	| ExRegex --TODO
 	deriving (Eq,Read,Show,Ord)
 
---TODO: Spacing
+--TODO: Indentation
 --TODO: Extraction
 
 -- $a .`+ 
@@ -157,9 +157,6 @@ main = do
 	t0 "$--$@$@$@```x/a/@``y/b/@``z-/fff/@"
 	t0 "+``$1$2"
 	t0 "$2$3``-"
-	t0 "[+`$]`-"
-	t0 "+`[$`-]"
-	t0 "+`$`-"
 	t0 "[+``$1$2]$3``-"
 	t0 "+``$1[$2$3``-]"
 	t0 "+``$1$2$3``-"
