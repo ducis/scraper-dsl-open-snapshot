@@ -166,6 +166,12 @@ main = do
 	t' "[ /a/ ]"
 	t' "[/a/ ]"
 	t' "[ /a/]"
+	t' "[ ]"
+    let ts = test (many' expr) (many' expr) $ putStrLn.groom
+    ts "/a/"
+    ts "/a/ "
+    ts " /a/"
+    ts " /a/ "
 
 	t "--``$abcd"
 	t ""
