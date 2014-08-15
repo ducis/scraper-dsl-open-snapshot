@@ -1,5 +1,5 @@
 try:
-	runghc scrapoo.hs
+	runghc scrapoo.hs | tee lasttry
 
 .FORCE:
 
