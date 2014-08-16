@@ -1,0 +1,7 @@
+val()							first
+prop(String)				first
+attr(String)				first
+html()						first
+hasClass(string)			any
+text()						combined
+css(String)					first
