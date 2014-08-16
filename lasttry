@@ -1,4 +1,16 @@
 =========================================
+//@
+//@
+=========================================
+//@a_b
+//@a_b
+=========================================
+//@a_
+//@a_
+=========================================
+//@_b
+//@_b
+=========================================
 $abcf@kkk+++/.whatever//.kkk/@abc@def+++○div○@123@1@1
 $abcf@kkk+++/.whatever//.kkk/@abc@def+++○div○@123@1@1
 =========================================
@@ -102,6 +114,118 @@ ExBlock [ExSelector '/' "a"]
 [ ]
 ExBlock []
 []
-*******
-DONE!!!
-*******
+=========================================
+$
+
+ExRef ""
+$
+=========================================
+/div.menucardproduct/-[
+						/form/@formid
+						/.menucardproductname/@name
+						/.menucardproductdescription/@desc
+						/.productextradescription/@desc1
+						/input[name=product]/@id_product
+						/input[name=menucat]/@id_menucat
+						/input[name=rest]/@id_rest
+						/div.menucardproductprice>a/@price
+						/div.menucardproductprice>a/@price_a_id
+]
+
+ExInfixBinary (ExSelector '/' "div.menucardproduct")
+  (OpSymbolic "-")
+  (ExBlock
+     [ExNamed (ExSelector '/' "form") "formid",
+      ExNamed (ExSelector '/' ".menucardproductname") "name",
+      ExNamed (ExSelector '/' ".menucardproductdescription") "desc",
+      ExNamed (ExSelector '/' ".productextradescription") "desc1",
+      ExNamed (ExSelector '/' "input[name=product]") "id_product",
+      ExNamed (ExSelector '/' "input[name=menucat]") "id_menucat",
+      ExNamed (ExSelector '/' "input[name=rest]") "id_rest",
+      ExNamed (ExSelector '/' "div.menucardproductprice>a") "price",
+      ExNamed (ExSelector '/' "div.menucardproductprice>a")
+        "price_a_id"])
+/div.menucardproduct/-[/form/@formid;/.menucardproductname/@name;/.menucardproductdescription/@desc;/.productextradescription/@desc1;/input[name=product]/@id_product;/input[name=menucat]/@id_menucat;/input[name=rest]/@id_rest;/div.menucardproductprice>a/@price;/div.menucardproductprice>a/@price_a_id]
+=========================================
+    _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
+
+ExInfixBinary
+  (ExInfixBinary ExSlot (OpAlphabetic "closest")
+     (ExPostfix
+        (ExSelector '/' "#imenucard>.menucardproducts.menucardproducts")
+        []
+        (OpAlphabetic "prev")
+        ["cat_id"]))
+  (OpSymbolic "-")
+  (ExNamed (ExSelector '/' ".menucardcategoryheader") "cat")
+_`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
+=========================================
+[
+    _`closest`//`prev@cat_id-//@cat
+]
+
+ExBlock
+  [ExInfixBinary
+     (ExInfixBinary ExSlot (OpAlphabetic "closest")
+        (ExPostfix (ExSelector '/' "") [] (OpAlphabetic "prev")
+           ["cat_id"]))
+     (OpSymbolic "-")
+     (ExNamed (ExSelector '/' "") "cat")]
+[_`closest`//`prev@cat_id-//@cat]
+=========================================
+/div.menucardproduct/`[
+    _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
+    _-[
+						/form/@formid
+						/.menucardproductname/@name
+						/.menucardproductdescription/@desc
+						/.productextradescription/@desc1
+						/input[name=product]/@id_product
+						/input[name=menucat]/@id_menucat
+						/input[name=rest]/@id_rest
+						/div.menucardproductprice>a/@price
+						/div.menucardproductprice>a/@price_a_id
+    ]
+]
+
+ExPostfix (ExSelector '/' "div.menucardproduct") []
+  (OpComposed
+     [ExInfixBinary
+        (ExInfixBinary ExSlot (OpAlphabetic "closest")
+           (ExPostfix
+              (ExSelector '/' "#imenucard>.menucardproducts.menucardproducts")
+              []
+              (OpAlphabetic "prev")
+              ["cat_id"]))
+        (OpSymbolic "-")
+        (ExNamed (ExSelector '/' ".menucardcategoryheader") "cat"),
+      ExInfixBinary ExSlot (OpSymbolic "-")
+        (ExBlock
+           [ExNamed (ExSelector '/' "form") "formid",
+            ExNamed (ExSelector '/' ".menucardproductname") "name",
+            ExNamed (ExSelector '/' ".menucardproductdescription") "desc",
+            ExNamed (ExSelector '/' ".productextradescription") "desc1",
+            ExNamed (ExSelector '/' "input[name=product]") "id_product",
+            ExNamed (ExSelector '/' "input[name=menucat]") "id_menucat",
+            ExNamed (ExSelector '/' "input[name=rest]") "id_rest",
+            ExNamed (ExSelector '/' "div.menucardproductprice>a") "price",
+            ExNamed (ExSelector '/' "div.menucardproductprice>a")
+              "price_a_id"])])
+  []
+/div.menucardproduct/`[_`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat;_-[/form/@formid;/.menucardproductname/@name;/.menucardproductdescription/@desc;/.productextradescription/@desc1;/input[name=product]/@id_product;/input[name=menucat]/@id_menucat;/input[name=rest]/@id_rest;/div.menucardproductprice>a/@price;/div.menucardproductprice>a/@price_a_id]]
+=========================================
+/div.menucardproduct/`[
+    .closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
+    .-`[
+						/form/@formid
+						/.menucardproductname/@name
+						/.menucardproductdescription/@desc
+						/.productextradescription/@desc1
+						/input[name=product]/@id_product
+						/input[name=menucat]/@id_menucat
+						/input[name=rest]/@id_rest
+						/div.menucardproductprice>a/@price
+						/div.menucardproductprice>a/@price_a_id
+    ]
+]
+

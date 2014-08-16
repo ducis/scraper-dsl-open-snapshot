@@ -15,6 +15,10 @@ $
     _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
 ===
 [
+    _`closest`//`prev@cat_id-//@cat
+]
+===
+/div.menucardproduct/`[
     _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
     _-[
 						/form/@formid
@@ -30,8 +34,8 @@ $
 ]
 ===
 /div.menucardproduct/`[
-    _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
-    _-[
+    .closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
+    .-`[
 						/form/@formid
 						/.menucardproductname/@name
 						/.menucardproductdescription/@desc

@@ -19,7 +19,12 @@ import Data.Set.CharSet
 import Text.Groom
 import Data.String.Here
 import Syntax.Slot
+import qualified Data.List.Split as LS
+import Debug.Diff
 
+skipChars s = ignore [] <$> many (Ls.foldl1 (<|>) [text [c]|c<-s])
+sW = skipChars " \t\r\n"
+sw = skipChars " \t"
 
 type Quote = String
 type Name = String
@@ -60,7 +65,9 @@ operatorSymbols = stringCS "-+" --Read from the operator def table
 
 alpha = subset isAlpha <$> token
 num = subset isNumber <$> token
-symbol = subset (`elemCS` operatorSymbols) <$> token
+char c = subset (==c) <$> token
+charset cs = subset (`elemCS` cs) <$> token
+symbol = charset operatorSymbols --subset (`elemCS` operatorSymbols) <$> token
 
 operator f
 	-- = opSimple <$> (many1 symbol <|> many1 alpha)
@@ -69,7 +76,14 @@ operator f
 	<|> f (opComposed <$> exprList )
 
 --identifier = cons <$> alpha <*> many (alpha <|> num)
-identifier = many (alpha <|> num) 
+--TODO: allow arbitrary string literal
+identifier 
+	= pure []
+	<|> cons <$> x <*> pure []
+	<|> cons <$> x' <*> many1 x'
+	where
+	x = alpha<|>num
+	x' = x<|>char '_'
 
 mkSelector delim = 
 	exSelector <$> pure d <*> quote [d] [d] 
@@ -77,7 +91,17 @@ mkSelector delim =
 	where
 	d = delim
 
-exprList = quote "[" "]" (manySfx expr <* skipSpace)
+sepBy1::(Syntax f, Eq a) => f a -> f () -> f [a]
+sepBy1 x d = cons <$> x <*> many (d*>x)
+
+exprList::Syntax f => f [Expr]
+exprList -- = quote "[" "]" (manySfx  expr <* sW)
+	= text "[" ☆> pure [] <*text "]"
+	<|> quote "[" "]" (sW*>sepBy1 expr delim<*sW)
+	where
+	delim 
+		= sW <* text ";" <* sW
+		<|> sw <* text "\n" <* sW
 
 selectors = Ls.foldl1 (<|>) $ map mkSelector "/¶\\█○"
 
@@ -97,16 +121,16 @@ namesSfx = manySfx naming
 --infixr 6 <★>
 infixr 6 <☆>
 --a <★> b = a <*> optSpace *> b
-a <☆> b = a <*> skipSpace *> b
+a <☆> b = a <*> sW *> b
 --a ★> b = a *> optSpace *> b
-a ☆> b = a *> skipSpace *> b
+a ☆> b = a *> sW *> b
 --many_ = (`sepBy` optSpace)
-many' = (`sepBy` skipSpace)
-manySfx = many.(skipSpace*>)
+many' = (`sepBy` sW)
+manySfx = many.(sW*>)
 --manySfx_ = many.(sepSpace*>)
 
-postfixNRest x n = nList (n-1) (x<*skipSpace) <*> arityMark n *> operator id <*> namesSfx
-prefixN x n = exPrefix <$> operator id <*> arityMark n *> namesSfx <*> nList n (skipSpace*>x)
+postfixNRest x n = nList (n-1) (x<*sW) <*> arityMark n *> operator id <*> namesSfx
+prefixN x n = exPrefix <$> operator id <*> arityMark n *> namesSfx <*> nList n (sW*>x)
 
 expr::Syntax f => f Expr
 expr = e 0 
@@ -129,24 +153,35 @@ expr' = exRef <$> text "$" *> identifier
 	-- <|> alts (map prefixN [1,2,3]) 
 	<|> exBlock <$> exprList
 
+snippet = between sW sW expr
+
 test p p' f x = do
 	putStrLn "========================================="
 	putStrLn x
-	--let p0 = Parser.Parser p
-	--let p1 = Printer.Printer p
 	let a = Parser.parse p x
-	--putStrLn $ groom a
-	mapM_ f a
-	let b = map (Printer.print p') a
-	let ls = catMaybes b
-	putStr $ unlines $ catMaybes b
-	when (length ls /= 1) $ fail (show (length ls)++" results!")
+	let na = Ls.nub a
+	let 
+		df (x:y:zs) = diff x y>>f y>>df (y:zs)
+		df _ = return ()
+	case na of 
+		(x:xs) -> f x >> df na
+		_ -> return ()
+	let b = map (Printer.print p') $ na
+	let ls = Ls.nub $ catMaybes b
+	putStr $ unlines $ ls
+	when (length a /= 1) $ fail (show (length a)++","++show (length $ ls)++" results!")
 
 main = do
+	let _t = test snippet snippet $ putStrLn.groom
+	let _t0 = test snippet snippet $ \_->return ()
 	let t = test expr expr print
 	let t' = test expr expr $ putStrLn.groom
 	let t0 = test expr expr $ \_->return ()
 	let z x s = putStr ">>" >> print s >> mapM_ print (Parser.parse x s)
+	t0 "//@"
+	t0 "//@a_b"
+	t0 "//@a_"
+	t0 "//@_b"
 	t0 "$abcf@kkk+++/.whatever//.kkk/@abc@def+++○div○@123@1@1"
 	t0 "$@+++/.whatever//.kkk/@@+++○div○@@@"
 	t0 "$aaa@kkk-_"
@@ -191,6 +226,8 @@ main = do
 	{-t "--``$abcd"
 	t ""-}
 
-
+	let tf f = readFile f >>= mapM_ _t.map unlines.LS.splitOn ["==="].lines
+	tf "sampletests"
+	--readFile sampleTest
 	putStrLn "*******\nDONE!!!\n*******"
 	return ()

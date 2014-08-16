@@ -42,31 +42,6 @@ if (system.args.length === 1){
 }
 /*
 //i
-/div.menucardproduct/-[
-						/form/@formid
-						/.menucardproductname/@name
-						/.menucardproductdescription/@desc
-						/.productextradescription/@desc1
-						/input[name=product]/@id_product
-						/input[name=menucat]/@id_menucat
-						/input[name=rest]/@id_rest
-						/div.menucardproductprice>a/@price
-						/div.menucardproductprice>a/@price_a_id
-]
 json field name compatability
 selector generation(factor out common parts)
-/div.menucardproduct/`[i
-    _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
-    _-[
-						/form/@formid
-						/.menucardproductname/@name
-						/.menucardproductdescription/@desc
-						/.productextradescription/@desc1
-						/input[name=product]/@id_product
-						/input[name=menucat]/@id_menucat
-						/input[name=rest]/@id_rest
-						/div.menucardproductprice>a/@price
-						/div.menucardproductprice>a/@price_a_id
-    ]
-]
 */
