@@ -56,7 +56,7 @@ if (system.args.length === 1){
 json field name compatability
 selector generation(factor out common parts)
 /div.menucardproduct/`[i
-    _`closest`/#imenucard>.menucardproducts.menucardproducts/
+    _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
     _-[
 						/form/@formid
 						/.menucardproductname/@name
