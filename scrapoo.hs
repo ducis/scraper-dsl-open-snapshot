@@ -168,8 +168,9 @@ test p p' f x = do
 		_ -> return ()
 	let b = map (Printer.print p') $ na
 	let ls = Ls.nub $ catMaybes b
+	let l = length
 	putStr $ unlines $ ls
-	when (length a /= 1) $ fail (show (length a)++","++show (length $ ls)++" results!")
+	when (l a /= 1 || l ls /=1) $ fail (show (l a)++","++show (l ls)++" results!")
 
 main = do
 	let _t = test snippet snippet $ putStrLn.groom
