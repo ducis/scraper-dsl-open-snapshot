@@ -100,12 +100,11 @@ exprList -- = quote "[" "]" (manySfx  expr <* sW)
 	<|> quote "[" "]" (sW*>sepBy1 expr delim<*sW)
 	where
 	delim 
-		= sW <* text ";" <* sW
+		= sW <* text "," <* sW
 		<|> sw <* text "\n" <* sW
 
 selectors = Ls.foldl1 (<|>) $ map mkSelector "/¶\\█○"
 
-arityMark n = text $ replicate n '`'
 
 nList::(Syntax f, Eq a) => Int -> f a -> f [a]
 nList n x = f n where
@@ -129,8 +128,11 @@ many' = (`sepBy` sW)
 manySfx = many.(sW*>)
 --manySfx_ = many.(sepSpace*>)
 
+arityMark n = text $ replicate n '`'
 postfixNRest x n = nList (n-1) (x<*sW) <*> arityMark n *> operator id <*> namesSfx
 prefixN x n = exPrefix <$> operator id <*> arityMark n *> namesSfx <*> nList n (sW*>x)
+
+--TODO: $`-``$$
 
 expr::Syntax f => f Expr
 expr = e 0 
