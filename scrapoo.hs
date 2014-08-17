@@ -18,7 +18,6 @@ import qualified Data.List as Ls
 import Data.Set.CharSet
 import Text.Groom
 import Data.String.Here
-import Syntax.Slot
 import qualified Data.List.Split as LS
 import Debug.Diff
 
@@ -39,7 +38,8 @@ data Expr
 	| ExSlot
 	| ExBlock [Expr]
 	-- | ExBranch [Expr] 
-	| ExInfixBinary Expr Operator Expr
+	| ExInfix Expr Operator [Expr]
+	| ExCurriedLeft Operator [Expr]
 	| ExPrefix Operator [Name] [Expr]
 	| ExPostfix Expr [Expr] Operator [Name]
 	| ExNamed Expr Name
@@ -131,22 +131,35 @@ manySfx = many.(sW*>)
 arityMark n = text $ replicate n '`'
 postfixNRest x n = nList (n-1) (x<*sW) <*> arityMark n *> operator id <*> namesSfx
 prefixN x n = exPrefix <$> operator id <*> arityMark n *> namesSfx <*> nList n (sW*>x)
+infixOperator = \case
+	0 -> operator (quote "`" "`") 
+	j -> text "`" *> operator id <* arityMark (j+1)
 
---TODO: $`-``$$
-
+--TODO:currying (not left recursive)
 expr::Syntax f => f Expr
 expr = e 0 
 	where
 	e::Syntax f => Int -> f Expr
-	e = \case
-		i@0 -> chainl1 (e (i+1)) (operator $ quote "`" "`") exInfixBinary
-		i@1 ->
-			foldl exPostfix <$> y <*> manySfx (alts $ map (postfixNRest y) [1,2,3])
-			where
-			x = e $ i+1 
+	e i = [
+		let
+			x' = foldl exInfix <$> x <*> many (sW*>rest)
+			r j = infixOperator j <*> (cons <$> (sW*>x') <*> nList j (sW*>x))
+			rest
+				= infixOperator 0 <☆> nList 1 x
+				<|> r 1
+		in x'
+		,
+		let 
 			y = x <|> alts (map (prefixN x) [1,2,3])
-		i@2 -> foldl exNamed <$> e(i+1) <*> namesSfx
-		_ -> expr'
+			z = foldl exPostfix <$> y <*> manySfx (alts $ map (postfixNRest y) [1,2,3])
+		in z
+		,
+		foldl exNamed <$> x <*> namesSfx
+		,
+		expr'
+		] !! i
+		where
+		x = e (i+1)
 
 expr'::Syntax f => f Expr
 expr' = exRef <$> text "$" *> identifier
@@ -181,6 +194,26 @@ main = do
 	let t' = test expr expr $ putStrLn.groom
 	let t0 = test expr expr $ \_->return ()
 	let z x s = putStr ">>" >> print s >> mapM_ print (Parser.parse x s)
+	t0 "$ - $"
+	t0 "$`-``$$"
+	t0 "$`-``[$`-``$$][$`-``$$]"
+	t0 "$`-`` $`-``$$ $`-``$$"
+	t0 "$`-`` $ $`-``$$"
+	t0 "$`-`` $`-``$$ $"
+	t0 "$ $ $ ```-"
+	t0 "-``` $ $ $"
+	t0 "[$$``-][$$``-]``-"
+	t0 "$$``- [$$``-] ``-"
+	t0 "[$$``-] $$``- ``-"
+	t0 "[$$``-] $$``-``-"
+	t0 "$$``- $$``- ``-"
+	t0 "$$``- $$``-``-"
+	t0 "-``[-``$$][-``$$]"
+	t0 "-`` [-``$$] -``$$"
+	t0 "-`` -``$$ [-``$$]"
+	t0 "-``-``$$ [-``$$]"
+	t0 "-`` -``$$ -``$$"
+	t0 "-``-``$$ -``$$"
 	t0 "//@"
 	t0 "//@a_b"
 	t0 "//@a_"
