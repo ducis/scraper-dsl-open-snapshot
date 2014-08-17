@@ -1,0 +1,14 @@
+/div.menucardproduct/`[
+    `closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat ;
+    -[
+						/form/@formid
+						/.menucardproductname/@name
+						/.menucardproductdescription/@desc
+						/.productextradescription/@desc1
+						/input[name=product]/@id_product
+						/input[name=menucat]/@id_menucat
+						/input[name=rest]/@id_rest
+						/div.menucardproductprice>a/@price
+						/div.menucardproductprice>a/@price_a_id
+    ] ;
+]

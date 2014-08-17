@@ -95,13 +95,15 @@ sepBy1::(Syntax f, Eq a) => f a -> f () -> f [a]
 sepBy1 x d = cons <$> x <*> many (d*>x)
 
 exprList::Syntax f => f [Expr]
-exprList -- = quote "[" "]" (manySfx  expr <* sW)
-	= text "[" ☆> pure [] <*text "]"
+exprList 
+	= quote "[" "]" (manySfx (expr<☆text ";") <* sW)
+	-- = text "[" ☆> pure [] <*text "]"
 	<|> quote "[" "]" (sW*>sepBy1 expr delim<*sW)
 	where
 	delim 
 		= sW <* text "," <* sW
-		<|> sw <* text "\n" <* sW
+	--		<|> sw <* text "\n" <* sW
+--TODO: lack of delimiters makes parser unacceptablly slow
 
 selectors = Ls.foldl1 (<|>) $ map mkSelector "/¶\\█○"
 
@@ -123,6 +125,7 @@ infixr 6 <☆>
 a <☆> b = a <*> sW *> b
 --a ★> b = a *> optSpace *> b
 a ☆> b = a *> sW *> b
+a <☆ b = a <* sW <* b
 --many_ = (`sepBy` optSpace)
 many' = (`sepBy` sW)
 manySfx = many.(sW*>)
@@ -150,8 +153,9 @@ expr = e 0
 		in x'
 		,
 		let 
-			y = x <|> alts (map (prefixN x) [1,2,3])
-			z = foldl exPostfix <$> y <*> manySfx (alts $ map (postfixNRest y) [1,2,3])
+			arities = [1,2,3]
+			y = x <|> alts (map (prefixN y) arities)
+			z = foldl exPostfix <$> y <*> manySfx (alts $ map (postfixNRest z) arities)
 		in z
 		,
 		foldl exNamed <$> x <*> namesSfx
@@ -167,6 +171,7 @@ expr' = exRef <$> text "$" *> identifier
 	<|> selectors
 	-- <|> alts (map prefixN [1,2,3]) 
 	<|> exBlock <$> exprList
+	-- <|> exCurriedLeft <$> alts [infixOperator i <*> 
 
 snippet = between sW sW expr
 
@@ -187,6 +192,7 @@ test p p' f x = do
 	putStr $ unlines $ ls
 	when (l a /= 1 || l ls /=1) $ fail (show (l a)++","++show (l ls)++" results!")
 
+
 main = do
 	let _t = test snippet snippet $ putStrLn.groom
 	let _t0 = test snippet snippet $ \_->return ()
@@ -202,18 +208,6 @@ main = do
 	t0 "$`-`` $`-``$$ $"
 	t0 "$ $ $ ```-"
 	t0 "-``` $ $ $"
-	t0 "[$$``-][$$``-]``-"
-	t0 "$$``- [$$``-] ``-"
-	t0 "[$$``-] $$``- ``-"
-	t0 "[$$``-] $$``-``-"
-	t0 "$$``- $$``- ``-"
-	t0 "$$``- $$``-``-"
-	t0 "-``[-``$$][-``$$]"
-	t0 "-`` [-``$$] -``$$"
-	t0 "-`` -``$$ [-``$$]"
-	t0 "-``-``$$ [-``$$]"
-	t0 "-`` -``$$ -``$$"
-	t0 "-``-``$$ -``$$"
 	t0 "//@"
 	t0 "//@a_b"
 	t0 "//@a_"
@@ -264,6 +258,23 @@ main = do
 
 	let tf f = readFile f >>= mapM_ _t.map unlines.LS.splitOn ["==="].lines
 	tf "sampletests"
-	--readFile sampleTest
+	
+	t0 "-``[-``$$][-``$$]"
+	t0 "-`` [-``$$] -``$$"
+	t0 "-`` -``$$ [-``$$]"
+	t0 "-``-``$$ [-``$$]"
+	t0 "-`` -``$$ -``$$"
+	t0 "-``-``$$ -``$$"
+	t0 "[$$``-][$$``-]``-"
+	t0 "$$``- [$$``-] ``-"
+	t0 "[$$``-] $$``- ``-"
+	t0 "[$$``-] $$``-``-"
+	t0 "$$``- $$``- ``-"
+	t0 "$$``- $$``-``-"
+
+	t' "$`[-$a@x,+$b@y,`find`$c@z, +$+//@+//@]"
+
+	tf "sampletests1"
+
 	putStrLn "*******\nDONE!!!\n*******"
 	return ()

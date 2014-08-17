@@ -6,7 +6,7 @@ $`-``$$
 $`-``$$
 =========================================
 $`-``[$`-``$$][$`-``$$]
-$`-``[$`-``$$][$`-``$$]
+$`-``[$`-``$$;][$`-``$$;]
 =========================================
 $`-`` $`-``$$ $`-``$$
 $`-``$`-``$$$`-``$$
@@ -23,10 +23,254 @@ $$$```-
 -``` $ $ $
 -```$$$
 =========================================
+//@
+//@
+=========================================
+//@a_b
+//@a_b
+=========================================
+//@a_
+//@a_
+=========================================
+//@_b
+//@_b
+=========================================
+$abcf@kkk+++/.whatever//.kkk/@abc@def+++○div○@123@1@1
+$abcf@kkk+++/.whatever//.kkk/@abc@def+++○div○@123@1@1
+=========================================
+$@+++/.whatever//.kkk/@@+++○div○@@@
+$@+++/.whatever//.kkk/@@+++○div○@@@
+=========================================
+$aaa@kkk-_
+$aaa@kkk-_
+=========================================
+--`$abcf
+--`$abcf
+=========================================
+--``/.ww/@1$1
+--``/.ww/@1$1
+=========================================
+$a$b``+$1``+
+$a$b``+$1``+
+=========================================
+$1`+@5
+$1`+@5
+=========================================
++`$1@5
++`$1@5
+=========================================
+$1--$2@3$4@5$5@6```x/a/@1``y/b/@2``z-/fff/@5
+$1--$2@3$4@5$5@6```x/a/@1``y/b/@2``z-/fff/@5
+=========================================
+$--$@$@$@```x/a/@``y/b/@``z-/fff/@
+$--$@$@$@```x/a/@``y/b/@``z-/fff/@
+=========================================
++``$1$2
++``$1$2
+=========================================
+$2$3``-
+$2$3``-
+=========================================
+[+``$1$2]$3``-
+[+``$1$2;]$3``-
+=========================================
++``$1[$2$3``-]
++``$1[$2$3``-;]
+=========================================
++``$1$2$3``-
++``$1$2$3``-
+=========================================
++``@x$1@a$2@b$3@c$4@d```-@z
++``@x$1@a$2@b$3@c$4@d```-@z
+=========================================
+$`a`$
+$`a`$
+=========================================
+$a$``a
+$a$``a
+=========================================
+$`[_`a]
+ExPostfix (ExRef "") []
+  (OpComposed [ExPostfix ExSlot [] (OpAlphabetic "a") []])
+  []
+$`[_`a;]
+=========================================
+$ $ ``+
+ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") []
+$$``+
+=========================================
+$a $ ``+
+ExPostfix (ExRef "a") [ExRef ""] (OpSymbolic "+") []
+$a$``+
+=========================================
+$ $b ``+
+ExPostfix (ExRef "") [ExRef "b"] (OpSymbolic "+") []
+$$b``+
+=========================================
+$a $b ``+
+ExPostfix (ExRef "a") [ExRef "b"] (OpSymbolic "+") []
+$a$b``+
+=========================================
+$ $``+
+ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") []
+$$``+
+=========================================
+$$ ``+
+ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") []
+$$``+
+=========================================
+$ `+
+ExPostfix (ExRef "") [] (OpSymbolic "+") []
+$`+
+=========================================
+[ /a/ ]
+ExBlock [ExSelector '/' "a"]
+[/a/;]
+=========================================
+[/a/ ]
+ExBlock [ExSelector '/' "a"]
+[/a/;]
+=========================================
+[ /a/]
+ExBlock [ExSelector '/' "a"]
+[/a/;]
+=========================================
+[ ]
+ExBlock []
+[]
+=========================================
+$
+
+ExRef ""
+$
+=========================================
+/div.menucardproduct/-[
+						/form/@formid ;
+						/.menucardproductname/@name ;
+						/.menucardproductdescription/@desc ;
+						/.productextradescription/@desc1 ;
+						/input[name=product]/@id_product ;
+						/input[name=menucat]/@id_menucat ;
+						/input[name=rest]/@id_rest ;
+						/div.menucardproductprice>a/@price ;
+						/div.menucardproductprice>a/@price_a_id ;
+]
+
+ExInfix (ExSelector '/' "div.menucardproduct") (OpSymbolic "-")
+  [ExBlock
+     [ExNamed (ExSelector '/' "form") "formid",
+      ExNamed (ExSelector '/' ".menucardproductname") "name",
+      ExNamed (ExSelector '/' ".menucardproductdescription") "desc",
+      ExNamed (ExSelector '/' ".productextradescription") "desc1",
+      ExNamed (ExSelector '/' "input[name=product]") "id_product",
+      ExNamed (ExSelector '/' "input[name=menucat]") "id_menucat",
+      ExNamed (ExSelector '/' "input[name=rest]") "id_rest",
+      ExNamed (ExSelector '/' "div.menucardproductprice>a") "price",
+      ExNamed (ExSelector '/' "div.menucardproductprice>a")
+        "price_a_id"]]
+/div.menucardproduct/-[/form/@formid;/.menucardproductname/@name;/.menucardproductdescription/@desc;/.productextradescription/@desc1;/input[name=product]/@id_product;/input[name=menucat]/@id_menucat;/input[name=rest]/@id_rest;/div.menucardproductprice>a/@price;/div.menucardproductprice>a/@price_a_id;]
+=========================================
+    _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
+
+ExInfix
+  (ExInfix ExSlot (OpAlphabetic "closest")
+     [ExPostfix
+        (ExSelector '/' "#imenucard>.menucardproducts.menucardproducts")
+        []
+        (OpAlphabetic "prev")
+        ["cat_id"]])
+  (OpSymbolic "-")
+  [ExNamed (ExSelector '/' ".menucardcategoryheader") "cat"]
+_`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
+=========================================
+[
+    _`closest`//`prev@cat_id-//@cat
+]
+
+ExBlock
+  [ExInfix
+     (ExInfix ExSlot (OpAlphabetic "closest")
+        [ExPostfix (ExSelector '/' "") [] (OpAlphabetic "prev")
+           ["cat_id"]])
+     (OpSymbolic "-")
+     [ExNamed (ExSelector '/' "") "cat"]]
+[_`closest`//`prev@cat_id-//@cat;]
+=========================================
+/div.menucardproduct/`[
+    _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat,
+    _-[
+						/form/@formid ;
+						/.menucardproductname/@name ;
+						/.menucardproductdescription/@desc ;
+						/.productextradescription/@desc1 ;
+						/input[name=product]/@id_product ;
+						/input[name=menucat]/@id_menucat ;
+						/input[name=rest]/@id_rest ;
+						/div.menucardproductprice>a/@price ;
+						/div.menucardproductprice>a/@price_a_id ;
+    ]
+]
+
+ExPostfix (ExSelector '/' "div.menucardproduct") []
+  (OpComposed
+     [ExInfix
+        (ExInfix ExSlot (OpAlphabetic "closest")
+           [ExPostfix
+              (ExSelector '/' "#imenucard>.menucardproducts.menucardproducts")
+              []
+              (OpAlphabetic "prev")
+              ["cat_id"]])
+        (OpSymbolic "-")
+        [ExNamed (ExSelector '/' ".menucardcategoryheader") "cat"],
+      ExInfix ExSlot (OpSymbolic "-")
+        [ExBlock
+           [ExNamed (ExSelector '/' "form") "formid",
+            ExNamed (ExSelector '/' ".menucardproductname") "name",
+            ExNamed (ExSelector '/' ".menucardproductdescription") "desc",
+            ExNamed (ExSelector '/' ".productextradescription") "desc1",
+            ExNamed (ExSelector '/' "input[name=product]") "id_product",
+            ExNamed (ExSelector '/' "input[name=menucat]") "id_menucat",
+            ExNamed (ExSelector '/' "input[name=rest]") "id_rest",
+            ExNamed (ExSelector '/' "div.menucardproductprice>a") "price",
+            ExNamed (ExSelector '/' "div.menucardproductprice>a")
+              "price_a_id"]]])
+  []
+/div.menucardproduct/`[_`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat;_-[/form/@formid;/.menucardproductname/@name;/.menucardproductdescription/@desc;/.productextradescription/@desc1;/input[name=product]/@id_product;/input[name=menucat]/@id_menucat;/input[name=rest]/@id_rest;/div.menucardproductprice>a/@price;/div.menucardproductprice>a/@price_a_id;];]
+=========================================
+-``[-``$$][-``$$]
+-``[-``$$;][-``$$;]
+=========================================
+-`` [-``$$] -``$$
+-``[-``$$;]-``$$
+=========================================
+-`` -``$$ [-``$$]
+-``-``$$[-``$$;]
+=========================================
+-``-``$$ [-``$$]
+-``-``$$[-``$$;]
+=========================================
+-`` -``$$ -``$$
+-``-``$$-``$$
+=========================================
+-``-``$$ -``$$
+-``-``$$-``$$
+=========================================
 [$$``-][$$``-]``-
-[$$``-][$$``-]``-
+[$$``-;][$$``-;]``-
 =========================================
 $$``- [$$``-] ``-
-$$``-[$$``-]``-
+$$``-[$$``-;]``-
 =========================================
 [$$``-] $$``- ``-
+[$$``-;]$$``-``-
+=========================================
+[$$``-] $$``-``-
+[$$``-;]$$``-``-
+=========================================
+$$``- $$``- ``-
+$$``-$$``-``-
+=========================================
+$$``- $$``-``-
+$$``-$$``-``-
+=========================================
+$`[-$a@x,+$b@y,`find`$c@z, +$+//@+//@]
