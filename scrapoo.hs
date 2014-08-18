@@ -49,6 +49,7 @@ data Expr
 data LeftRecRest
 	= LrrInfix Operator [Name] [Expr]
 	| LrrPostfix [Expr] Operator [Name]
+	| LrrGrouping [Name] --essentially a unary postfix operator without arity mark
 	deriving (Eq,Read,Show,Ord)
 
 --TODO: .html .text .etc
@@ -160,6 +161,7 @@ expr = e 0
 			lrRest
 				=		lrrInfix <$> (r 0 <|> r 1)
 				<|>	lrrPostfix <$> (alts $ map (postfixNRest self) arities)
+				<|>	lrrGrouping <$> sW *> text "!" *> namesSfx
 		in foldl exLeftRec <$> x <*> manySfx lrRest
 		,
 		x <|> alts (map (prefixN self) arities)
@@ -268,7 +270,6 @@ main = do
 	t ""-}
 
 	let tf f = readFile f >>= mapM_ _t.map unlines.LS.splitOn ["==="].lines
-	tf "sampletests"
 	
 	t0 "-``[-``$$][-``$$]"
 	t0 "-`` [-``$$] -``$$"
@@ -290,6 +291,7 @@ main = do
 
 	t' "$`[_-$a@x,_+$b@y,_`find`$c@z,_+$+//@+//@]"
 
+	tf "sampletests"
 	-- tf "sampletests1"
 
 	putStrLn "*******\nDONE!!!\n*******"

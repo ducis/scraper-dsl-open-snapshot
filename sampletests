@@ -12,14 +12,16 @@ $
 						/div.menucardproductprice>a/@price_a_id ;
 ]
 ===
-    _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
+    _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/!@cat
+===
+    _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id!-@cat/.menucardcategoryheader/!
 ===
 [
     _`closest`//`prev@cat_id-//@cat
 ]
 ===
 /div.menucardproduct/`[
-    _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat,
+    _`closest`@cat_prev/#imenucard>.menucardproducts.menucardproducts/@wtf`prev@cat_id-/.menucardcategoryheader/!@cat,
     _-[
 						/form/@formid ;
 						/.menucardproductname/@name ;
