@@ -6,10 +6,10 @@ $`-``$$
 $`-``$$
 =========================================
 $`-``[$`-``$$][$`-``$$]
-$`-``[$`-``$$;][$`-``$$;]
+$`-``[$`-``$$][$`-``$$]
 =========================================
-$`-`` $`-``$$ $`-``$$
-$`-``$`-``$$$`-``$$
+$a`-`` $b`-``$c$d $e`-``$f$g
+$a`-``$b`-``$c$d$e`-``$f$g
 =========================================
 $`-`` $ $`-``$$
 $`-``$$`-``$$
@@ -59,6 +59,18 @@ $1`+@5
 +`$1@5
 +`$1@5
 =========================================
+$1--$2@3
+$1--$2@3
+=========================================
+$1--$2@3$4@5$5@6```x
+$1--$2@3$4@5$5@6```x
+=========================================
+$1--$2@3$4@5$5@6```x/a/@1``y
+$1--$2@3$4@5$5@6```x/a/@1``y
+=========================================
+$1--$2@3$4@5$5@6```x/a/@1``y/b/@2``z
+$1--$2@3$4@5$5@6```x/a/@1``y/b/@2``z
+=========================================
 $1--$2@3$4@5$5@6```x/a/@1``y/b/@2``z-/fff/@5
 $1--$2@3$4@5$5@6```x/a/@1``y/b/@2``z-/fff/@5
 =========================================
@@ -72,10 +84,10 @@ $2$3``-
 $2$3``-
 =========================================
 [+``$1$2]$3``-
-[+``$1$2;]$3``-
+[+``$1$2]$3``-
 =========================================
 +``$1[$2$3``-]
-+``$1[$2$3``-;]
++``$1[$2$3``-]
 =========================================
 +``$1$2$3``-
 +``$1$2$3``-
@@ -90,53 +102,55 @@ $a$``a
 $a$``a
 =========================================
 $`[_`a]
-ExPostfix (ExRef "") []
-  (OpComposed [ExPostfix ExSlot [] (OpAlphabetic "a") []])
-  []
-$`[_`a;]
+ExLeftRec (ExRef "")
+  (LrrPostfix []
+     (OpComposed ','
+        [ExLeftRec ExSlot (LrrPostfix [] (OpAlphabetic "a") [])])
+     [])
+$`[_`a]
 =========================================
 $ $ ``+
-ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") []
+ExLeftRec (ExRef "") (LrrPostfix [ExRef ""] (OpSymbolic "+") [])
 $$``+
 =========================================
 $a $ ``+
-ExPostfix (ExRef "a") [ExRef ""] (OpSymbolic "+") []
+ExLeftRec (ExRef "a") (LrrPostfix [ExRef ""] (OpSymbolic "+") [])
 $a$``+
 =========================================
 $ $b ``+
-ExPostfix (ExRef "") [ExRef "b"] (OpSymbolic "+") []
+ExLeftRec (ExRef "") (LrrPostfix [ExRef "b"] (OpSymbolic "+") [])
 $$b``+
 =========================================
 $a $b ``+
-ExPostfix (ExRef "a") [ExRef "b"] (OpSymbolic "+") []
+ExLeftRec (ExRef "a") (LrrPostfix [ExRef "b"] (OpSymbolic "+") [])
 $a$b``+
 =========================================
 $ $``+
-ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") []
+ExLeftRec (ExRef "") (LrrPostfix [ExRef ""] (OpSymbolic "+") [])
 $$``+
 =========================================
 $$ ``+
-ExPostfix (ExRef "") [ExRef ""] (OpSymbolic "+") []
+ExLeftRec (ExRef "") (LrrPostfix [ExRef ""] (OpSymbolic "+") [])
 $$``+
 =========================================
 $ `+
-ExPostfix (ExRef "") [] (OpSymbolic "+") []
+ExLeftRec (ExRef "") (LrrPostfix [] (OpSymbolic "+") [])
 $`+
 =========================================
 [ /a/ ]
-ExBlock [ExSelector '/' "a"]
-[/a/;]
+ExBlock ',' [ExSelector '/' "a"]
+[/a/]
 =========================================
 [/a/ ]
-ExBlock [ExSelector '/' "a"]
-[/a/;]
+ExBlock ',' [ExSelector '/' "a"]
+[/a/]
 =========================================
 [ /a/]
-ExBlock [ExSelector '/' "a"]
-[/a/;]
+ExBlock ',' [ExSelector '/' "a"]
+[/a/]
 =========================================
 [ ]
-ExBlock []
+ExBlock ';' []
 []
 =========================================
 $
@@ -156,45 +170,45 @@ $
 						/div.menucardproductprice>a/@price_a_id ;
 ]
 
-ExInfix (ExSelector '/' "div.menucardproduct") (OpSymbolic "-")
-  [ExBlock
-     [ExNamed (ExSelector '/' "form") "formid",
-      ExNamed (ExSelector '/' ".menucardproductname") "name",
-      ExNamed (ExSelector '/' ".menucardproductdescription") "desc",
-      ExNamed (ExSelector '/' ".productextradescription") "desc1",
-      ExNamed (ExSelector '/' "input[name=product]") "id_product",
-      ExNamed (ExSelector '/' "input[name=menucat]") "id_menucat",
-      ExNamed (ExSelector '/' "input[name=rest]") "id_rest",
-      ExNamed (ExSelector '/' "div.menucardproductprice>a") "price",
-      ExNamed (ExSelector '/' "div.menucardproductprice>a")
-        "price_a_id"]]
+ExLeftRec (ExSelector '/' "div.menucardproduct")
+  (LrrInfix (OpSymbolic "-") []
+     [ExBlock ';'
+        [ExNamed (ExSelector '/' "form") "formid",
+         ExNamed (ExSelector '/' ".menucardproductname") "name",
+         ExNamed (ExSelector '/' ".menucardproductdescription") "desc",
+         ExNamed (ExSelector '/' ".productextradescription") "desc1",
+         ExNamed (ExSelector '/' "input[name=product]") "id_product",
+         ExNamed (ExSelector '/' "input[name=menucat]") "id_menucat",
+         ExNamed (ExSelector '/' "input[name=rest]") "id_rest",
+         ExNamed (ExSelector '/' "div.menucardproductprice>a") "price",
+         ExNamed (ExSelector '/' "div.menucardproductprice>a")
+           "price_a_id"]])
 /div.menucardproduct/-[/form/@formid;/.menucardproductname/@name;/.menucardproductdescription/@desc;/.productextradescription/@desc1;/input[name=product]/@id_product;/input[name=menucat]/@id_menucat;/input[name=rest]/@id_rest;/div.menucardproductprice>a/@price;/div.menucardproductprice>a/@price_a_id;]
 =========================================
     _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
 
-ExInfix
-  (ExInfix ExSlot (OpAlphabetic "closest")
-     [ExPostfix
-        (ExSelector '/' "#imenucard>.menucardproducts.menucardproducts")
-        []
-        (OpAlphabetic "prev")
-        ["cat_id"]])
-  (OpSymbolic "-")
-  [ExNamed (ExSelector '/' ".menucardcategoryheader") "cat"]
+ExLeftRec
+  (ExLeftRec
+     (ExLeftRec ExSlot
+        (LrrInfix (OpAlphabetic "closest") []
+           [ExSelector '/' "#imenucard>.menucardproducts.menucardproducts"]))
+     (LrrPostfix [] (OpAlphabetic "prev") ["cat_id"]))
+  (LrrInfix (OpSymbolic "-") []
+     [ExNamed (ExSelector '/' ".menucardcategoryheader") "cat"])
 _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat
 =========================================
 [
     _`closest`//`prev@cat_id-//@cat
 ]
 
-ExBlock
-  [ExInfix
-     (ExInfix ExSlot (OpAlphabetic "closest")
-        [ExPostfix (ExSelector '/' "") [] (OpAlphabetic "prev")
-           ["cat_id"]])
-     (OpSymbolic "-")
-     [ExNamed (ExSelector '/' "") "cat"]]
-[_`closest`//`prev@cat_id-//@cat;]
+ExBlock ','
+  [ExLeftRec
+     (ExLeftRec
+        (ExLeftRec ExSlot
+           (LrrInfix (OpAlphabetic "closest") [] [ExSelector '/' ""]))
+        (LrrPostfix [] (OpAlphabetic "prev") ["cat_id"]))
+     (LrrInfix (OpSymbolic "-") [] [ExNamed (ExSelector '/' "") "cat"])]
+[_`closest`//`prev@cat_id-//@cat]
 =========================================
 /div.menucardproduct/`[
     _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat,
@@ -211,43 +225,44 @@ ExBlock
     ]
 ]
 
-ExPostfix (ExSelector '/' "div.menucardproduct") []
-  (OpComposed
-     [ExInfix
-        (ExInfix ExSlot (OpAlphabetic "closest")
-           [ExPostfix
-              (ExSelector '/' "#imenucard>.menucardproducts.menucardproducts")
-              []
-              (OpAlphabetic "prev")
-              ["cat_id"]])
-        (OpSymbolic "-")
-        [ExNamed (ExSelector '/' ".menucardcategoryheader") "cat"],
-      ExInfix ExSlot (OpSymbolic "-")
-        [ExBlock
-           [ExNamed (ExSelector '/' "form") "formid",
-            ExNamed (ExSelector '/' ".menucardproductname") "name",
-            ExNamed (ExSelector '/' ".menucardproductdescription") "desc",
-            ExNamed (ExSelector '/' ".productextradescription") "desc1",
-            ExNamed (ExSelector '/' "input[name=product]") "id_product",
-            ExNamed (ExSelector '/' "input[name=menucat]") "id_menucat",
-            ExNamed (ExSelector '/' "input[name=rest]") "id_rest",
-            ExNamed (ExSelector '/' "div.menucardproductprice>a") "price",
-            ExNamed (ExSelector '/' "div.menucardproductprice>a")
-              "price_a_id"]]])
-  []
-/div.menucardproduct/`[_`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat;_-[/form/@formid;/.menucardproductname/@name;/.menucardproductdescription/@desc;/.productextradescription/@desc1;/input[name=product]/@id_product;/input[name=menucat]/@id_menucat;/input[name=rest]/@id_rest;/div.menucardproductprice>a/@price;/div.menucardproductprice>a/@price_a_id;];]
+ExLeftRec (ExSelector '/' "div.menucardproduct")
+  (LrrPostfix []
+     (OpComposed ','
+        [ExLeftRec
+           (ExLeftRec
+              (ExLeftRec ExSlot
+                 (LrrInfix (OpAlphabetic "closest") []
+                    [ExSelector '/' "#imenucard>.menucardproducts.menucardproducts"]))
+              (LrrPostfix [] (OpAlphabetic "prev") ["cat_id"]))
+           (LrrInfix (OpSymbolic "-") []
+              [ExNamed (ExSelector '/' ".menucardcategoryheader") "cat"]),
+         ExLeftRec ExSlot
+           (LrrInfix (OpSymbolic "-") []
+              [ExBlock ';'
+                 [ExNamed (ExSelector '/' "form") "formid",
+                  ExNamed (ExSelector '/' ".menucardproductname") "name",
+                  ExNamed (ExSelector '/' ".menucardproductdescription") "desc",
+                  ExNamed (ExSelector '/' ".productextradescription") "desc1",
+                  ExNamed (ExSelector '/' "input[name=product]") "id_product",
+                  ExNamed (ExSelector '/' "input[name=menucat]") "id_menucat",
+                  ExNamed (ExSelector '/' "input[name=rest]") "id_rest",
+                  ExNamed (ExSelector '/' "div.menucardproductprice>a") "price",
+                  ExNamed (ExSelector '/' "div.menucardproductprice>a")
+                    "price_a_id"]])])
+     [])
+/div.menucardproduct/`[_`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id-/.menucardcategoryheader/@cat,_-[/form/@formid;/.menucardproductname/@name;/.menucardproductdescription/@desc;/.productextradescription/@desc1;/input[name=product]/@id_product;/input[name=menucat]/@id_menucat;/input[name=rest]/@id_rest;/div.menucardproductprice>a/@price;/div.menucardproductprice>a/@price_a_id;]]
 =========================================
 -``[-``$$][-``$$]
--``[-``$$;][-``$$;]
+-``[-``$$][-``$$]
 =========================================
 -`` [-``$$] -``$$
--``[-``$$;]-``$$
+-``[-``$$]-``$$
 =========================================
 -`` -``$$ [-``$$]
--``-``$$[-``$$;]
+-``-``$$[-``$$]
 =========================================
 -``-``$$ [-``$$]
--``-``$$[-``$$;]
+-``-``$$[-``$$]
 =========================================
 -`` -``$$ -``$$
 -``-``$$-``$$
@@ -256,21 +271,47 @@ ExPostfix (ExSelector '/' "div.menucardproduct") []
 -``-``$$-``$$
 =========================================
 [$$``-][$$``-]``-
-[$$``-;][$$``-;]``-
+[$$``-][$$``-]``-
 =========================================
 $$``- [$$``-] ``-
-$$``-[$$``-;]``-
+$$``-[$$``-]``-
 =========================================
 [$$``-] $$``- ``-
-[$$``-;]$$``-``-
+[$$``-]$$``-``-
 =========================================
 [$$``-] $$``-``-
-[$$``-;]$$``-``-
+[$$``-]$$``-``-
 =========================================
 $$``- $$``- ``-
 $$``-$$``-``-
 =========================================
 $$``- $$``-``-
 $$``-$$``-``-
+=========================================
+$-$-$`children
+ExLeftRec
+  (ExLeftRec
+     (ExLeftRec (ExRef "") (LrrInfix (OpSymbolic "-") [] [ExRef ""]))
+     (LrrInfix (OpSymbolic "-") [] [ExRef ""]))
+  (LrrPostfix [] (OpAlphabetic "children") [])
+$-$-$`children
+=========================================
+$1-$2-$3
+ExLeftRec
+  (ExLeftRec (ExRef "1") (LrrInfix (OpSymbolic "-") [] [ExRef "2"]))
+  (LrrInfix (OpSymbolic "-") [] [ExRef "3"])
+$1-$2-$3
+=========================================
+$1-$2$3``-
+ExLeftRec
+  (ExLeftRec (ExRef "1") (LrrInfix (OpSymbolic "-") [] [ExRef "2"]))
+  (LrrPostfix [ExRef "3"] (OpSymbolic "-") [])
+$1-$2$3``-
+=========================================
+$1-$2`-
+ExLeftRec
+  (ExLeftRec (ExRef "1") (LrrInfix (OpSymbolic "-") [] [ExRef "2"]))
+  (LrrPostfix [] (OpSymbolic "-") [])
+$1-$2`-
 =========================================
 $`[-$a@x,+$b@y,`find`$c@z, +$+//@+//@]

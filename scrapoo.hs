@@ -30,20 +30,25 @@ type Name = String
 data Operator 
 	= OpSymbolic String 
 	| OpAlphabetic String --Including abbreviation
-	| OpComposed [Expr]
+	| OpComposed Char [Expr]
 	deriving (Eq,Read,Show,Ord)
 data Expr 
 	= ExSelector Char String
 	| ExRef String
 	| ExSlot
-	| ExBlock [Expr]
+	| ExBlock Char [Expr]
 	-- | ExBranch [Expr] 
-	| ExInfix Expr Operator [Expr]
+	| ExLeftRec Expr LeftRecRest
+	-- | ExInfix Expr Operator [Expr]
 	| ExCurriedLeft Operator [Expr]
 	| ExPrefix Operator [Name] [Expr]
-	| ExPostfix Expr [Expr] Operator [Name]
+	-- | ExPostfix Expr [Expr] Operator [Name]
 	| ExNamed Expr Name
 	| ExRegex --TODO
+	deriving (Eq,Read,Show,Ord)
+data LeftRecRest
+	= LrrInfix Operator [Name] [Expr]
+	| LrrPostfix [Expr] Operator [Name]
 	deriving (Eq,Read,Show,Ord)
 
 --TODO: .html .text .etc
@@ -58,6 +63,7 @@ data Expr
 
 $(defineIsomorphisms ''Expr)
 $(defineIsomorphisms ''Operator)
+$(defineIsomorphisms ''LeftRecRest)
 
 quote l r = between (text l) (text r)
 
@@ -94,11 +100,11 @@ mkSelector delim =
 sepBy1::(Syntax f, Eq a) => f a -> f () -> f [a]
 sepBy1 x d = cons <$> x <*> many (d*>x)
 
-exprList::Syntax f => f [Expr]
+exprList::Syntax f => f (Char,[Expr])
 exprList 
-	= quote "[" "]" (manySfx (expr<☆text ";") <* sW)
+	= pure ';' <*> quote "[" "]" (manySfx (expr<☆text ";") <* sW)
 	-- = text "[" ☆> pure [] <*text "]"
-	<|> quote "[" "]" (sW*>sepBy1 expr delim<*sW)
+	<|> pure ',' <*> quote "[" "]" (sW*>sepBy1 expr delim<*sW)
 	where
 	delim 
 		= sW <* text "," <* sW
@@ -129,6 +135,7 @@ a <☆ b = a <* sW <* b
 --many_ = (`sepBy` optSpace)
 many' = (`sepBy` sW)
 manySfx = many.(sW*>)
+many1Sfx = many1.(sW*>)
 --manySfx_ = many.(sepSpace*>)
 
 arityMark n = text $ replicate n '`'
@@ -144,26 +151,37 @@ expr = e 0
 	where
 	e::Syntax f => Int -> f Expr
 	e i = [
-		let
-			x' = foldl exInfix <$> x <*> many (sW*>rest)
-			r j = infixOperator j <*> (cons <$> (sW*>x') <*> nList j (sW*>x))
+		let 
+			r 0 = infixOperator 0 <*> namesSfx <☆> nList 1 x 
+			r j = infixOperator j <*> namesSfx <*> (cons <$> (sW*>self) <*> nList j (sW*>x))
+			lrRest
+				=		lrrInfix <$> (r 0 <|> r 1)
+				<|>	lrrPostfix <$> (alts $ map (postfixNRest self) arities)
+		in foldl exLeftRec <$> x <*> manySfx lrRest
+		,
+		{-let
+			infiX = foldl exInfix <$> x <*> manySfx rest
 			rest
 				= infixOperator 0 <☆> nList 1 x
 				<|> r 1
-		in x'
+				where
+				r j = infixOperator j <*> (cons <$> (sW*>infiX) <*> nList j (sW*>x))
+		in infiX 
 		,
 		let 
-			arities = [1,2,3]
-			y = x <|> alts (map (prefixN y) arities)
-			z = foldl exPostfix <$> y <*> manySfx (alts $ map (postfixNRest z) arities)
-		in z
+			postfiX = foldl exPostfix <$> x <*> manySfx (alts $ map (postfixNRest postfiX) arities)
+		in postfiX
+		,-}
+		x <|> alts (map (prefixN self) arities)
 		,
 		foldl exNamed <$> x <*> namesSfx
 		,
 		expr'
 		] !! i
 		where
+		arities = [1,2,3]
 		x = e (i+1)
+		self = e i
 
 expr'::Syntax f => f Expr
 expr' = exRef <$> text "$" *> identifier
@@ -203,7 +221,7 @@ main = do
 	t0 "$ - $"
 	t0 "$`-``$$"
 	t0 "$`-``[$`-``$$][$`-``$$]"
-	t0 "$`-`` $`-``$$ $`-``$$"
+	t0 "$a`-`` $b`-``$c$d $e`-``$f$g"
 	t0 "$`-`` $ $`-``$$"
 	t0 "$`-`` $`-``$$ $"
 	t0 "$ $ $ ```-"
@@ -220,6 +238,10 @@ main = do
 	t0 "$a$b``+$1``+"
 	t0 "$1`+@5"
 	t0 "+`$1@5"
+	t0 "$1--$2@3"
+	t0 "$1--$2@3$4@5$5@6```x"
+	t0 "$1--$2@3$4@5$5@6```x/a/@1``y"
+	t0 "$1--$2@3$4@5$5@6```x/a/@1``y/b/@2``z"
 	t0 "$1--$2@3$4@5$5@6```x/a/@1``y/b/@2``z-/fff/@5"
 	t0 "$--$@$@$@```x/a/@``y/b/@``z-/fff/@"
 	t0 "+``$1$2"
@@ -271,6 +293,11 @@ main = do
 	t0 "[$$``-] $$``-``-"
 	t0 "$$``- $$``- ``-"
 	t0 "$$``- $$``-``-"
+
+	t' "$-$-$`children"
+	t' "$1-$2-$3"
+	t' "$1-$2$3``-"
+	t' "$1-$2`-"
 
 	t' "$`[-$a@x,+$b@y,`find`$c@z, +$+//@+//@]"
 
