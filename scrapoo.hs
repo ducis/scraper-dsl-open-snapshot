@@ -40,7 +40,7 @@ data Expr
 	-- | ExBranch [Expr] 
 	| ExLeftRec Expr LeftRecRest
 	-- | ExInfix Expr Operator [Expr]
-	| ExCurriedLeft Operator [Expr]
+	-- | ExCurriedLeft Operator [Name] [Expr] -- don't do currying
 	| ExPrefix Operator [Name] [Expr]
 	-- | ExPostfix Expr [Expr] Operator [Name]
 	| ExNamed Expr Name
@@ -79,7 +79,7 @@ operator f
 	-- = opSimple <$> (many1 symbol <|> many1 alpha)
 	= opSymbolic <$> many1 symbol
 	<|> f (opAlphabetic <$> many1 alpha)
-	<|> f (opComposed <$> exprList )
+	<|> f (opComposed <$> exprList)
 
 --identifier = cons <$> alpha <*> many (alpha <|> num)
 --TODO: allow arbitrary string literal
@@ -100,11 +100,12 @@ mkSelector delim =
 sepBy1::(Syntax f, Eq a) => f a -> f () -> f [a]
 sepBy1 x d = cons <$> x <*> many (d*>x)
 
-exprList::Syntax f => f (Char,[Expr])
-exprList 
-	= pure ';' <*> quote "[" "]" (manySfx (expr<☆text ";") <* sW)
+exprList = bigList expr
+bigList::(Syntax f,Eq a) => f a -> f (Char,[a])
+bigList x
+	= pure ';' <*> quote "[" "]" (manySfx (x<☆text ";") <* sW)
 	-- = text "[" ☆> pure [] <*text "]"
-	<|> pure ',' <*> quote "[" "]" (sW*>sepBy1 expr delim<*sW)
+	<|> pure ',' <*> quote "[" "]" (sW*>sepBy1 x delim<*sW)
 	where
 	delim 
 		= sW <* text "," <* sW
@@ -153,25 +154,14 @@ expr = e 0
 	e i = [
 		let 
 			r 0 = infixOperator 0 <*> namesSfx <☆> nList 1 x 
-			r j = infixOperator j <*> namesSfx <*> (cons <$> (sW*>self) <*> nList j (sW*>x))
+			r 1 = infixOperator 1 <*> namesSfx <*> (cons <$> (sW*>self) <*> nList 1 (sW*>x))
+			-- r j = infixOperator j <*> namesSfx <*> (cons <$> (sW*>self) <*> nList j (sW*>x)) 
+				--TODO:only the right most expr should be x
 			lrRest
 				=		lrrInfix <$> (r 0 <|> r 1)
 				<|>	lrrPostfix <$> (alts $ map (postfixNRest self) arities)
 		in foldl exLeftRec <$> x <*> manySfx lrRest
 		,
-		{-let
-			infiX = foldl exInfix <$> x <*> manySfx rest
-			rest
-				= infixOperator 0 <☆> nList 1 x
-				<|> r 1
-				where
-				r j = infixOperator j <*> (cons <$> (sW*>infiX) <*> nList j (sW*>x))
-		in infiX 
-		,
-		let 
-			postfiX = foldl exPostfix <$> x <*> manySfx (alts $ map (postfixNRest postfiX) arities)
-		in postfiX
-		,-}
 		x <|> alts (map (prefixN self) arities)
 		,
 		foldl exNamed <$> x <*> namesSfx
@@ -189,7 +179,6 @@ expr' = exRef <$> text "$" *> identifier
 	<|> selectors
 	-- <|> alts (map prefixN [1,2,3]) 
 	<|> exBlock <$> exprList
-	-- <|> exCurriedLeft <$> alts [infixOperator i <*> 
 
 snippet = between sW sW expr
 
@@ -299,9 +288,9 @@ main = do
 	t' "$1-$2$3``-"
 	t' "$1-$2`-"
 
-	t' "$`[-$a@x,+$b@y,`find`$c@z, +$+//@+//@]"
+	t' "$`[_-$a@x,_+$b@y,_`find`$c@z,_+$+//@+//@]"
 
-	tf "sampletests1"
+	-- tf "sampletests1"
 
 	putStrLn "*******\nDONE!!!\n*******"
 	return ()

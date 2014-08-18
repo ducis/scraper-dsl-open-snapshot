@@ -314,4 +314,23 @@ ExLeftRec
   (LrrPostfix [] (OpSymbolic "-") [])
 $1-$2`-
 =========================================
-$`[-$a@x,+$b@y,`find`$c@z, +$+//@+//@]
+$`[_-$a@x,_+$b@y,_`find`$c@z,_+$+//@+//@]
+ExLeftRec (ExRef "")
+  (LrrPostfix []
+     (OpComposed ','
+        [ExLeftRec ExSlot
+           (LrrInfix (OpSymbolic "-") [] [ExNamed (ExRef "a") "x"]),
+         ExLeftRec ExSlot
+           (LrrInfix (OpSymbolic "+") [] [ExNamed (ExRef "b") "y"]),
+         ExLeftRec ExSlot
+           (LrrInfix (OpAlphabetic "find") [] [ExNamed (ExRef "c") "z"]),
+         ExLeftRec
+           (ExLeftRec
+              (ExLeftRec ExSlot (LrrInfix (OpSymbolic "+") [] [ExRef ""]))
+              (LrrInfix (OpSymbolic "+") [] [ExNamed (ExSelector '/' "") ""]))
+           (LrrInfix (OpSymbolic "+") [] [ExNamed (ExSelector '/' "") ""])])
+     [])
+$`[_-$a@x,_+$b@y,_`find`$c@z,_+$+//@+//@]
+*******
+DONE!!!
+*******
