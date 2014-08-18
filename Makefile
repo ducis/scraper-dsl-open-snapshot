@@ -6,6 +6,9 @@ try:
 watch: .FORCE
 	inotifywait . -rm | runghc watch.hs make scrapoo.hs sampletests\*
 
+watch: .FORCE
+	inotifywait . -rm | runghc watch.hs remotest scrapoo.hs sampletests\*
+
 watchEx1: .FORCE
 	inotifywait . -rm | runghc watch.hs 'runghc Example1.hs' Example1.hs
 	
