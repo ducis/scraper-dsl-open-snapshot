@@ -33,13 +33,13 @@ data Name = Name Char (Maybe String) String (Maybe String)
 data Operator 
 	= OpSymbolic String 
 	| OpAlphabetic String --Including abbreviation
-	| OpComposed Char [Expr]
+	| OpComposed Char Char [Expr]
 	deriving (Eq,Read,Show,Ord)
 data Expr 
 	= ExSelector Char String
 	| ExRef String
 	| ExSlot
-	| ExBlock Char [Expr]
+	| ExBlock Char Char [Expr]
 	-- | ExBranch [Expr] 
 	| ExLeftRec Expr LeftRecRest
 	-- | ExInfix Expr Operator [Expr]
@@ -47,7 +47,6 @@ data Expr
 	| ExPrefix Operator [Name] [Expr]
 	-- | ExPostfix Expr [Expr] Operator [Name]
 	| ExNamed Expr Name
-	| ExRegex --TODO
 	-- | ExLeftmostPlaceholder
 	deriving (Eq,Read,Show,Ord)
 data LeftRecRest
@@ -64,12 +63,25 @@ data LeftRecRest
 --http://api.jquery.com/category/attributes/
 --	val() prop(String) html() hasClass(string) attr(string) text() css(String)
 --	TODO: XPath
---	TODO Stanford tregex
---TODO: Extraction
+--	TODO Stanford tregex / TGrep2
+--DONE: Extraction
 --TODO: Indentation after pretty-printing
 --TODO: Parallelize tests
+--TODO: currying $$``[__``a] $$$```[___```b]
+--		$$[``a] $$$[```b]
+--TODO: numeric indexing and ranges
+--TODO: code generation
+--		SUB-TODO: operator table
+--		SUB-TODO: assertion(x.length == 1);
+--		/a/{`aid}@zzz 
+--		translates to 
+--		output.zzz = $('a').map(function(x){
+--			var set = $(x);
+--			assert(set.length == 1);
+--			return $(x).attr(id);
+--		});
 
---CURRENT; map-branching (both as an unary operator and as an operand)
+--DONE; map-branching (both as an unary operator and as an operand). Just use curly braces
 
 $(defineIsomorphisms ''Expr)
 $(defineIsomorphisms ''Operator)
@@ -124,10 +136,13 @@ sepBy1 x d = cons <$> x <*> many (d*>x)
 braced = quote "(" ")"
 crlBrcd = quote "{" "}"
 sqBrktd = quote "[" "]" 
+multiQuote pairs x = alts [char l <*> x <* text r|l:r<-pairs]
 
-curriedList,exprList :: Syntax f => f (Char, [Expr])
-curriedList = sqBrktd $ bigList curried
-exprList = sqBrktd $ bigList expr
+exprListBrackting = multiQuote ["[]","{}"]
+
+curriedList,exprList :: Syntax f => f (Char, (Char, [Expr]))
+curriedList = exprListBrackting $ bigList curried
+exprList = exprListBrackting $ bigList expr
 
 bigList::(Syntax f,Eq a) => f a -> f (Char,[a])
 bigList x

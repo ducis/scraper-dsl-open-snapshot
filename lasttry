@@ -104,7 +104,7 @@ $a$``a
 $`[_`a]
 ExLeftRec (ExRef "")
   (LrrPostfix []
-     (OpComposed ','
+     (OpComposed '[' ','
         [ExLeftRec ExSlot (LrrPostfix [] (OpAlphabetic "a") [])])
      [])
 $`[_`a]
@@ -138,19 +138,19 @@ ExLeftRec (ExRef "") (LrrPostfix [] (OpSymbolic "+") [])
 $`+
 =========================================
 [ /a/ ]
-ExBlock ',' [ExSelector '/' "a"]
+ExBlock '[' ',' [ExSelector '/' "a"]
 [/a/]
 =========================================
 [/a/ ]
-ExBlock ',' [ExSelector '/' "a"]
+ExBlock '[' ',' [ExSelector '/' "a"]
 [/a/]
 =========================================
 [ /a/]
-ExBlock ',' [ExSelector '/' "a"]
+ExBlock '[' ',' [ExSelector '/' "a"]
 [/a/]
 =========================================
 [ ]
-ExBlock ';' []
+ExBlock '[' ';' []
 []
 =========================================
 -``[-``$$][-``$$]
@@ -218,7 +218,7 @@ $1-$2`-
 $`[_-$a@x,_+$b@y,_`find`$c@z,_+$+//@+//@]
 ExLeftRec (ExRef "")
   (LrrPostfix []
-     (OpComposed ','
+     (OpComposed '[' ','
         [ExLeftRec ExSlot
            (LrrInfix (OpSymbolic "-") []
               [ExNamed (ExRef "a") (Name '@' Nothing "x" Nothing)]),
@@ -257,7 +257,7 @@ $
 
 ExLeftRec (ExSelector '/' "div.menucardproduct")
   (LrrInfix (OpSymbolic "-") []
-     [ExBlock ';'
+     [ExBlock '[' ';'
         [ExNamed (ExSelector '/' "form")
            (Name '@' Nothing "formid" Nothing),
          ExNamed (ExSelector '/' ".menucardproductname")
@@ -314,7 +314,7 @@ _`closest`/#imenucard>.menucardproducts.menucardproducts/`prev@cat_id!-@cat/.men
     _`closest`//`prev@cat_id-//@cat
 ]
 
-ExBlock ','
+ExBlock '[' ','
   [ExLeftRec
      (ExLeftRec
         (ExLeftRec ExSlot
@@ -342,7 +342,7 @@ ExBlock ','
 
 ExLeftRec (ExSelector '/' "div.menucardproduct")
   (LrrPostfix []
-     (OpComposed ','
+     (OpComposed '[' ','
         [ExLeftRec
            (ExLeftRec
               (ExLeftRec
@@ -359,7 +359,7 @@ ExLeftRec (ExSelector '/' "div.menucardproduct")
            (LrrGrouping [Name '@' Nothing "cat" Nothing]),
          ExLeftRec ExSlot
            (LrrInfix (OpSymbolic "-") []
-              [ExBlock ';'
+              [ExBlock '[' ';'
                  [ExNamed (ExSelector '/' "form")
                     (Name '@' Nothing "formid" Nothing),
                   ExNamed (ExSelector '/' ".menucardproductname")
@@ -389,7 +389,7 @@ ExLeftRec (ExSelector '/' "div.menucardproduct")
 
 ExLeftRec (ExSelector '/' "input")
   (LrrInfix (OpSymbolic "-") []
-     [ExBlock ';'
+     [ExBlock '[' ';'
         [ExLeftRec
            (ExLeftRec ExSlot
               (LrrInfix (OpSymbolic "-") [] [ExSelector '/' "[name=product]"]))
@@ -412,7 +412,7 @@ ExLeftRec (ExSelector '/' "input")
 
 ExLeftRec (ExSelector '/' "input")
   (LrrInfix (OpSymbolic "-") []
-     [ExBlock ';'
+     [ExBlock '[' ';'
         [ExNamed (ExSelector '/' "[name=product]")
            (Name '#' Nothing "id_product" Nothing),
          ExNamed (ExSelector '/' "[name=menucat]")
@@ -429,7 +429,7 @@ ExLeftRec (ExSelector '/' "input")
 
 ExLeftRec (ExSelector '/' "input")
   (LrrInfix (OpSymbolic "-") []
-     [ExBlock ';'
+     [ExBlock '[' ';'
         [ExLeftRec (ExSelector '/' "[name=product]")
            (LrrGrouping [Name '@' Nothing "id_product" Nothing]),
          ExLeftRec (ExSelector '/' "[name=menucat]")
@@ -456,10 +456,10 @@ ExLeftRec (ExSelector '/' "input")
 
 ExLeftRec (ExSelector '/' "div.menucardproduct")
   (LrrInfix (OpAlphabetic "map") []
-     [ExBlock ','
+     [ExBlock '[' ','
         [ExLeftRec ExSlot
            (LrrPostfix []
-              (OpComposed ','
+              (OpComposed '[' ','
                  [ExLeftRec
                     (ExLeftRec
                        (ExLeftRec
@@ -476,7 +476,7 @@ ExLeftRec (ExSelector '/' "div.menucardproduct")
                     (LrrGrouping [Name '@' Nothing "cat" Nothing]),
                   ExLeftRec ExSlot
                     (LrrInfix (OpSymbolic "-") []
-                       [ExBlock ';'
+                       [ExBlock '[' ';'
                           [ExNamed (ExSelector '/' "form")
                              (Name '#' Nothing "formid" Nothing),
                            ExNamed (ExSelector '/' ".menucardproductname")
@@ -487,7 +487,7 @@ ExLeftRec (ExSelector '/' "div.menucardproduct")
                              (Name '#' Nothing "desc1" Nothing),
                            ExLeftRec (ExLeftRec (ExSelector '/' "input") (LrrGrouping []))
                              (LrrInfix (OpSymbolic "-") []
-                                [ExBlock ';'
+                                [ExBlock '[' ';'
                                    [ExLeftRec (ExSelector '/' "[name=product]")
                                       (LrrGrouping [Name '@' Nothing "id_product" Nothing]),
                                     ExLeftRec (ExSelector '/' "[name=menucat]")
@@ -505,7 +505,7 @@ ExLeftRec (ExSelector '/' "div.menucardproduct")
 
 ExLeftRec (ExSelector '/' "div.menucardproductprice>a")
   (LrrPostfix []
-     (OpComposed ','
+     (OpComposed '[' ','
         [ExLeftRec ExSlot
            (LrrPostfix [] (OpAlphabetic "html")
               [Name '#' Nothing "price" Nothing]),
@@ -535,7 +535,7 @@ ExNamed
 
 ExLeftRec (ExSelector '/' "div.menucardproductprice>a")
   (LrrPostfix []
-     (OpComposed ','
+     (OpComposed '[' ','
         [ExCurriedLeft (OpAlphabetic "html")
            [Name '#' Nothing "price" Nothing]
            [],
@@ -544,6 +544,72 @@ ExLeftRec (ExSelector '/' "div.menucardproductprice>a")
            []])
      [])
 /div.menucardproductprice>a/[`html#price,`id#price_a_id]
+=========================================
+/a/{`aid}@sss
+
+ExLeftRec (ExSelector '/' "a")
+  (LrrPostfix []
+     (OpComposed '{' ',' [ExCurriedLeft (OpAlphabetic "aid") [] []])
+     [Name '@' Nothing "sss" Nothing])
+/a/{`aid}@sss
+=========================================
+/div.menucardproduct/ {
+    `closest`@cat_prev/#imenucard>.menucardproducts.menucardproducts/@wtf`prev@cat_id-/.menucardcategoryheader/!@cat,
+    -[
+						/form/#formid ;
+						/.menucardproductname/#name ;
+						/.menucardproductdescription/#desc ;
+						/.productextradescription/#desc1 ;
+						/input/!-[
+							/[name=product]/!@id_product ;
+							/[name=menucat]/!@id_menucat ;
+							/[name=rest]/!@id_rest ;
+						];
+						/div.menucardproductprice>a/#price#price_a_id ;
+    ]
+}
+
+ExLeftRec (ExSelector '/' "div.menucardproduct")
+  (LrrPostfix []
+     (OpComposed '{' ','
+        [ExLeftRec
+           (ExLeftRec
+              (ExLeftRec
+                 (ExCurriedLeft (OpAlphabetic "closest")
+                    [Name '@' Nothing "cat_prev" Nothing]
+                    [ExNamed
+                       (ExSelector '/' "#imenucard>.menucardproducts.menucardproducts")
+                       (Name '@' Nothing "wtf" Nothing)])
+                 (LrrPostfix [] (OpAlphabetic "prev")
+                    [Name '@' Nothing "cat_id" Nothing]))
+              (LrrInfix (OpSymbolic "-") []
+                 [ExSelector '/' ".menucardcategoryheader"]))
+           (LrrGrouping [Name '@' Nothing "cat" Nothing]),
+         ExCurriedLeft (OpSymbolic "-") []
+           [ExBlock '[' ';'
+              [ExNamed (ExSelector '/' "form")
+                 (Name '#' Nothing "formid" Nothing),
+               ExNamed (ExSelector '/' ".menucardproductname")
+                 (Name '#' Nothing "name" Nothing),
+               ExNamed (ExSelector '/' ".menucardproductdescription")
+                 (Name '#' Nothing "desc" Nothing),
+               ExNamed (ExSelector '/' ".productextradescription")
+                 (Name '#' Nothing "desc1" Nothing),
+               ExLeftRec (ExLeftRec (ExSelector '/' "input") (LrrGrouping []))
+                 (LrrInfix (OpSymbolic "-") []
+                    [ExBlock '[' ';'
+                       [ExLeftRec (ExSelector '/' "[name=product]")
+                          (LrrGrouping [Name '@' Nothing "id_product" Nothing]),
+                        ExLeftRec (ExSelector '/' "[name=menucat]")
+                          (LrrGrouping [Name '@' Nothing "id_menucat" Nothing]),
+                        ExLeftRec (ExSelector '/' "[name=rest]")
+                          (LrrGrouping [Name '@' Nothing "id_rest" Nothing])]]),
+               ExNamed
+                 (ExNamed (ExSelector '/' "div.menucardproductprice>a")
+                    (Name '#' Nothing "price" Nothing))
+                 (Name '#' Nothing "price_a_id" Nothing)]]])
+     [])
+/div.menucardproduct/{`closest`@cat_prev/#imenucard>.menucardproducts.menucardproducts/@wtf`prev@cat_id-/.menucardcategoryheader/!@cat,-[/form/#formid;/.menucardproductname/#name;/.menucardproductdescription/#desc;/.productextradescription/#desc1;/input/!-[/[name=product]/!@id_product;/[name=menucat]/!@id_menucat;/[name=rest]/!@id_rest;];/div.menucardproductprice>a/#price#price_a_id;]}
 *******
 DONE!!!
 *******

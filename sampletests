@@ -76,3 +76,21 @@ $
 /div.menucardproductprice>a/#html:price#id:price_a_id
 ===
 /div.menucardproductprice>a/[ `html#price, `id#price_a_id ]
+===
+/a/{`aid}@sss
+===
+/div.menucardproduct/ {
+    `closest`@cat_prev/#imenucard>.menucardproducts.menucardproducts/@wtf`prev@cat_id-/.menucardcategoryheader/!@cat,
+    -[
+						/form/#formid ;
+						/.menucardproductname/#name ;
+						/.menucardproductdescription/#desc ;
+						/.productextradescription/#desc1 ;
+						/input/!-[
+							/[name=product]/!@id_product ;
+							/[name=menucat]/!@id_menucat ;
+							/[name=rest]/!@id_rest ;
+						];
+						/div.menucardproductprice>a/#price#price_a_id ;
+    ]
+}
