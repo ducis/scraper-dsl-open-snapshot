@@ -63,11 +63,13 @@ data LeftRecRest
 
 --http://api.jquery.com/category/attributes/
 --	val() prop(String) html() hasClass(string) attr(string) text() css(String)
+--	TODO: XPath
+--	TODO Stanford tregex
 --TODO: Extraction
 --TODO: Indentation after pretty-printing
 --TODO: Parallelize tests
 
---TODO; map-branching (both as an unary operator and as an operand)
+--CURRENT; map-branching (both as an unary operator and as an operand)
 
 $(defineIsomorphisms ''Expr)
 $(defineIsomorphisms ''Operator)
@@ -123,7 +125,7 @@ braced = quote "(" ")"
 crlBrcd = quote "{" "}"
 sqBrktd = quote "[" "]" 
 
--- curriedList, exprList :: (Syntax f, Eq a) => f (Char, [a])
+curriedList,exprList :: Syntax f => f (Char, [Expr])
 curriedList = sqBrktd $ bigList curried
 exprList = sqBrktd $ bigList expr
 
