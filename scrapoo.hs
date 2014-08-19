@@ -21,56 +21,23 @@ import Data.String.Here
 import qualified Data.List.Split as LS
 import Debug.Diff
 import System.Environment
+import DSL.Scrapoo.ParseTree
 
 skipChars s = ignore [] <$> many (Ls.foldl1 (<|>) [text [c]|c<-s])
 sW = skipChars " \t\r\n"
 sw = skipChars " \t"
 
-type Quote = String
--- type Name = String
-data Name = Name Char (Maybe String) String (Maybe String)
-	deriving (Eq,Read,Show,Ord)
-data Operator 
-	= OpSymbolic String 
-	| OpAlphabetic String --Including abbreviation
-	| OpComposed Char Char [Expr]
-	deriving (Eq,Read,Show,Ord)
-data Expr 
-	= ExSelector Char String
-	| ExRef String
-	| ExSlot
-	| ExBlock Char Char [Expr]
-	-- | ExBranch [Expr] 
-	| ExLeftRec Expr LeftRecRest
-	-- | ExInfix Expr Operator [Expr]
-	| ExCurriedLeft Operator [Name] [Expr]
-	| ExPrefix Operator [Name] [Expr]
-	-- | ExPostfix Expr [Expr] Operator [Name]
-	| ExNamed Expr Name
-	-- | ExLeftmostPlaceholder
-	deriving (Eq,Read,Show,Ord)
-data LeftRecRest
-	= LrrInfix Operator [Name] [Expr]
-	| LrrPostfix [Expr] Operator [Name]
-	| LrrGrouping [Name] --essentially a unary postfix operator without arity mark 
-		--TODO: when applied to the leftmost 'atom', breaks current block.
-		--		$a-[$b!-$c,$d!-$e]
-		--		becomes
-		--		[$a-$b-$c,$a-$d-$e]
-		--		Or should it be done at typing? Like coercing 'leftmost' string literal to element set
-	deriving (Eq,Read,Show,Ord)
-
 --http://api.jquery.com/category/attributes/
 --	val() prop(String) html() hasClass(string) attr(string) text() css(String)
 --	TODO: XPath
 --	TODO Stanford tregex / TGrep2
---DONE: Extraction
 --TODO: Indentation after pretty-printing
 --TODO: Parallelize tests
+--TODO: Type checker
 --TODO: currying $$``[__``a] $$$```[___```b]
 --		$$[``a] $$$[```b]
 --TODO: numeric indexing and ranges
---TODO: code generation
+--TODO: code generation		CURRENT
 --		SUB-TODO: operator table
 --		SUB-TODO: assertion(x.length == 1);
 --		/a/{`aid}@zzz 
@@ -252,7 +219,6 @@ test n p p' f x = do
 	let l = length
 	putStr $ unlines $ ls
 	when (l a /= 1 || l ls /=1) $ fail (show (l a)++","++show (l ls)++" results!")
-
 
 main = do
 	nCheck<-getArgs
