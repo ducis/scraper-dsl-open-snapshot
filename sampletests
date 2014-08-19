@@ -34,3 +34,45 @@ $
 						/div.menucardproductprice>a/@price_a_id ;
     ]
 ]
+===
+						/input/-[
+							_-/[name=product]/!@id_product ;
+							_-/[name=menucat]/!@id_menucat ;
+							_-/[name=rest]/!@id_rest ;
+						]
+===
+						/input/-[
+							/[name=product]/#id_product ;
+							/[name=menucat]/#id_menucat ;
+							/[name=rest]/#id_rest ;
+						]
+===
+						/input/-[
+							/[name=product]/!@id_product ;
+							/[name=menucat]/!@id_menucat ;
+							/[name=rest]/!@id_rest ;
+						]
+===
+/div.menucardproduct/ `map` [_`[
+    _`closest`@cat_prev/#imenucard>.menucardproducts.menucardproducts/@wtf`prev@cat_id-/.menucardcategoryheader/!@cat,
+    _-[
+						/form/#formid ;
+						/.menucardproductname/#name ;
+						/.menucardproductdescription/#desc ;
+						/.productextradescription/#desc1 ;
+						/input/!-[
+							/[name=product]/!@id_product ;
+							/[name=menucat]/!@id_menucat ;
+							/[name=rest]/!@id_rest ;
+						];
+						/div.menucardproductprice>a/#price#price_a_id ;
+    ]
+]]
+===
+/div.menucardproductprice>a/`[ _`html#price, _`id#price_a_id ]
+===
+/div.menucardproductprice>a/#price^html#price_a_id^id
+===
+/div.menucardproductprice>a/#html:price#id:price_a_id
+===
+/div.menucardproductprice>a/[ `html#price, `id#price_a_id ]

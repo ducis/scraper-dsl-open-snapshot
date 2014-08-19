@@ -1,12 +1,14 @@
 try:
 	runghc scrapoo.hs | tee lasttry
+full:
+	runghc scrapoo.hs 999
 
 .FORCE:
 
 watch: .FORCE
 	inotifywait . -rm | runghc watch.hs make scrapoo.hs sampletests\*
 
-watch: .FORCE
+remowatch: .FORCE
 	inotifywait . -rm | runghc watch.hs remotest scrapoo.hs sampletests\*
 
 watchEx1: .FORCE
